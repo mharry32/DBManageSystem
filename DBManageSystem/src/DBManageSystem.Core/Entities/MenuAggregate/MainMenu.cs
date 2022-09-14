@@ -3,17 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 
 namespace DBManageSystem.Core.Entities.MenuAggregate;
 public class MainMenu:MenuBase
 {
    private MainMenu() { }
 
-  public MainMenu(string name,int order,List<SubMenu> subMenus)
+  public MainMenu(string name,int order)
   {
     Name = name;
     Order = order;
-    _subMenus = subMenus;
+  }
+
+
+  public void AddSubMenu(SubMenu subMenu)
+  {
+    Guard.Against.Null(subMenu.MainMenu);
+    if(subMenu.MainMenu.Id!=this.Id)
+    {
+      throw new ArgumentException($"SubMenu doesn't belong to MainMenu,MainMenuId:{this.Id},SubMenuId:{subMenu.Id}");
+    }
+
+    if (!SubMenus.Any(i => i.Order == subMenu.Order))
+    {
+      _subMenus.Add(subMenu);
+      return;
+    }
+    else
+    {
+      throw new ArgumentException($"Have Duplicate Order in SubMenu,Order:{subMenu.Order}");
+    }
+   
   }
 
   private readonly List<SubMenu> _subMenus = new List<SubMenu>();
