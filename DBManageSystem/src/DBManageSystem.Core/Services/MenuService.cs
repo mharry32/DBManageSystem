@@ -10,9 +10,10 @@ using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Entities.MenuAggregate;
 using DBManageSystem.Core.Entities.MenuAggregate.Specifications;
 using DBManageSystem.Core.Entities.Specifications;
+using DBManageSystem.Core.Interfaces;
 using DBManageSystem.SharedKernel.Interfaces;
 
-namespace DBManageSystem.Core.Interfaces;
+namespace DBManageSystem.Core.Services;
 public class MenuService : IMenuService
 {
   private readonly IRepository<SubMenu> _subMenuRepository;
@@ -52,7 +53,7 @@ public class MenuService : IMenuService
   {
     try
     {
-      Guard.Against.NullOrEmpty(roleMenus);
+      Guard.Against.Null(roleMenus);
       var roleMenuSpec = new RoleMenusByRoleIdSpec(roleMenus[0].RoleId);
       var roleMenusInStore = await _roleMenuRepository.ListAsync(roleMenuSpec);
       await _roleMenuRepository.DeleteRangeAsync(roleMenusInStore);
