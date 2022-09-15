@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DBManageSystem.IntegrationTests.Services.UserServiceTests;
-public class BaseIdentityTestFixture
+public class BaseIdentityTestFixture:IDisposable
 {
   private const string ConnectionString = @"Server=localhost;Database=dbsystest;Uid=root;Pwd=1995072132Mh.;charset=UTF8";
   public IServiceProvider _serviceProvider { get; private set; }
@@ -35,9 +35,14 @@ public class BaseIdentityTestFixture
         roleManager = _serviceProvider.GetRequiredService<RoleManager<Role>>();
         signInManager = _serviceProvider.GetRequiredService<SignInManager<User>>();
         identityContext = _serviceProvider.GetRequiredService<AppIdentityDbContext>();
-        identityContext.Database.EnsureDeleted();
+        
         identityContext.Database.EnsureCreated();
 
     
+  }
+
+  public void Dispose()
+  {
+    identityContext.Database.EnsureDeleted();
   }
 }

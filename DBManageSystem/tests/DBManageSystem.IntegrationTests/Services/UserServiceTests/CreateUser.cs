@@ -8,6 +8,8 @@ using DBManageSystem.Infrastructure.Services;
 using Xunit;
 
 namespace DBManageSystem.IntegrationTests.Services.UserServiceTests;
+
+[Collection("CreateUser")]
 public class CreateUser:IClassFixture<BaseIdentityTestFixture>
 {
   public BaseIdentityTestFixture Fixture { get; }

@@ -42,22 +42,27 @@ public class UserService : IUserService
     }
   }
 
-  public Task<Result> DeleteUser(User user)
+  public Task<Result> DeleteUser(int userId)
   {
     throw new NotImplementedException();
   }
 
-  public Task<Result<List<User>>> GetAllUsersExceptForCurrent(User currentUser)
+  public Task<Result<List<User>>> GetAllUsersExceptForCurrent(int currentUserId)
   {
     throw new NotImplementedException();
   }
 
-  public Task<Result<Role>> GetRole(User user)
+  public Task<Result<Role>> GetRoleByUserId(int userId)
   {
     throw new NotImplementedException();
   }
 
   public Task<Result<User>> GetUserById(int userId)
+  {
+    throw new NotImplementedException();
+  }
+
+  public Task<Result<User>> GetUserByName(string userName)
   {
     throw new NotImplementedException();
   }
