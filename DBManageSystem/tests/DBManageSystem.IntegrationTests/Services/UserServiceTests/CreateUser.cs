@@ -29,4 +29,37 @@ public class CreateUser:IClassFixture<BaseIdentityTestFixture>
     Assert.Equal(user.UserName, userInDb.UserName);
 
   }
+
+  [Fact]
+  public async Task CreateDuplicateUser()
+  {
+    User user = new User();
+    user.UserName = "testerUser";
+    UserService userService = new UserService(Fixture.userManager, null, null);
+   await userService.CreateUser(user);
+
+
+    User userDup = new User();
+    userDup.UserName = "testerUser";
+    
+    var result = await userService.CreateUser(userDup);
+    Assert.False(result.IsSuccess);
+    Assert.NotEmpty(result.Errors);
+  }
+
+  [Fact]
+  public async Task CreateTwoDifferentUsers()
+  {
+    User user = new User();
+    user.UserName = "testerUser";
+    UserService userService = new UserService(Fixture.userManager, null, null);
+    await userService.CreateUser(user);
+
+
+    User userDup = new User();
+    userDup.UserName = "testerUser2";
+
+    var result = await userService.CreateUser(userDup);
+    Assert.True(result.IsSuccess);
+  }
 }

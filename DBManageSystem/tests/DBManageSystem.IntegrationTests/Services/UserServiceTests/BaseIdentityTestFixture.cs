@@ -18,6 +18,8 @@ public class BaseIdentityTestFixture
   public UserManager<User> userManager { get; private set; }
   public RoleManager<Role> roleManager { get; private set; }
 
+  public SignInManager<User> signInManager { get; private set; }
+
   public AppIdentityDbContext identityContext { get; private set; }
   public BaseIdentityTestFixture()
   {
@@ -31,6 +33,7 @@ public class BaseIdentityTestFixture
     _serviceProvider = scope.ServiceProvider;
         userManager = _serviceProvider.GetRequiredService<UserManager<User>>();
         roleManager = _serviceProvider.GetRequiredService<RoleManager<Role>>();
+        signInManager = _serviceProvider.GetRequiredService<SignInManager<User>>();
         identityContext = _serviceProvider.GetRequiredService<AppIdentityDbContext>();
         identityContext.Database.EnsureDeleted();
         identityContext.Database.EnsureCreated();
