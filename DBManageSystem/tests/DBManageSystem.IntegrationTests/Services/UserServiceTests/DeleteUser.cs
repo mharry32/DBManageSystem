@@ -28,7 +28,7 @@ public class DeleteUser : IClassFixture<BaseIdentityTestFixture>
 
     var userInDb = await Fixture.userManager.FindByNameAsync(user.UserName);
 
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager, null, default, default);
     var result =await userService.DeleteUser(userInDb.Id);
     Assert.True(result.IsSuccess);
 
@@ -49,7 +49,7 @@ public class DeleteUser : IClassFixture<BaseIdentityTestFixture>
     int deletedUserId = userInDb.Id;
     await Fixture.userManager.DeleteAsync(userInDb);
 
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager, null, default, default);
     var result = await userService.DeleteUser(deletedUserId);
 
     Assert.False(result.IsSuccess);

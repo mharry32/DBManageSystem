@@ -11,11 +11,13 @@ public interface IRoleService
 {
   Task<Result<List<Role>>> GetRoleExceptForAdminAndDefault();
 
-  Task<Result> CreateRole(Role role);
+  Task<Result> CreateRole(string roleName);
 
-  Task<Result> DeleteRole(Role role);
+  Task<Result> DeleteRole(int roleId);
 
-  Task<Result> SetRoleForUser(Role role, User user);
+  Task<Result> SetRoleForUser(int roleId, int userId);
+
+  Task<Result<Role>> GetRoleByName(string roleName);
 
 
 

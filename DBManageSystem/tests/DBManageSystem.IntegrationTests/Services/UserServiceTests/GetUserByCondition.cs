@@ -36,7 +36,7 @@ public class GetUserByCondition:IClassFixture<BaseIdentityTestFixture>
     await Fixture.userManager.CreateAsync(user3, UserConstants.DefaultPassword);
 
     var currentUser = await Fixture.userManager.FindByNameAsync(user3.UserName);
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager,default, default, default);
 
     var result =await userService.GetAllUsersExceptForCurrent(currentUser.Id);
 
@@ -53,7 +53,7 @@ public class GetUserByCondition:IClassFixture<BaseIdentityTestFixture>
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
 
     var currentUser = await Fixture.userManager.FindByNameAsync(user.UserName);
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager, default,default, default);
 
     var result = await userService.GetUserById(currentUser.Id);
     Assert.True(result.IsSuccess);
@@ -71,10 +71,10 @@ public class GetUserByCondition:IClassFixture<BaseIdentityTestFixture>
     var currentUser = await Fixture.userManager.FindByNameAsync(user.UserName);
     await Fixture.userManager.DeleteAsync(currentUser);
 
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager,default, default, default);
 
     var result = await userService.GetUserById(currentUser.Id);
-    Assert.True(result.IsSuccess);
+    Assert.True(result.Status == Ardalis.Result.ResultStatus.NotFound);
     Assert.Null(result.Value);
 
   }
@@ -87,7 +87,7 @@ public class GetUserByCondition:IClassFixture<BaseIdentityTestFixture>
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
 
     var currentUser = await Fixture.userManager.FindByNameAsync(user.UserName);
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager,default, default, default);
 
     var result = await userService.GetUserByName(user.UserName);
     Assert.True(result.IsSuccess);
@@ -105,10 +105,10 @@ public class GetUserByCondition:IClassFixture<BaseIdentityTestFixture>
     var currentUser = await Fixture.userManager.FindByNameAsync(user.UserName);
     await Fixture.userManager.DeleteAsync(currentUser);
 
-    UserService userService = new UserService(Fixture.userManager, default, default);
+    UserService userService = new UserService(Fixture.userManager, default,default, default);
 
     var result = await userService.GetUserByName(user.UserName);
-    Assert.True(result.IsSuccess);
+    Assert.True(result.Status == Ardalis.Result.ResultStatus.NotFound);
     Assert.Null(result.Value);
 
   }

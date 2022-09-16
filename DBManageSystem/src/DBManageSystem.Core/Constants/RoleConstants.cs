@@ -9,5 +9,10 @@ public class RoleConstants
 {
   public const int DEFAULT = 0;
 
+  public const string DEFAULT_ROLENAME = "";
+
   public const int ADMINISTRATOR = 1;
+
+  public const string ADMINISTRATOR_ROLENAME = "administrator";
+
 }

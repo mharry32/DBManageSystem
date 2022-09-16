@@ -16,13 +16,15 @@ public class UserService : IUserService
   private readonly SignInManager<User> _signInManager;
   private readonly UserManager<User> _userManager;
   private readonly IAppLogger<UserService> _logger;
+  private readonly RoleManager<Role> _roleManager;
 
   public UserService(UserManager<User> userManager,
-        SignInManager<User> signInManager, IAppLogger<UserService> logger)
+        SignInManager<User> signInManager, RoleManager<Role> roleManager,IAppLogger<UserService> logger)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _logger = logger;
+    _roleManager = roleManager;
   }
 
   public async Task<Result> CreateUser(User user)
@@ -72,7 +74,7 @@ public class UserService : IUserService
     throw new NotImplementedException();
   }
 
-  public Task<Result> ModifyPassword(User user)
+  public Task<Result> ModifyPassword(int userId, string currentPassword, string newPassword)
   {
     throw new NotImplementedException();
   }

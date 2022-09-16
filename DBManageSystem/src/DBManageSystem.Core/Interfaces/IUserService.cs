@@ -17,7 +17,7 @@ public interface IUserService
 
   Task<Result> DeleteUser(int userId);
 
-  Task<Result> ModifyPassword(User user);
+  Task<Result> ModifyPassword(int userId,string currentPassword,string newPassword);
 
   Task<Result<User>> GetUserById(int userId);
 
