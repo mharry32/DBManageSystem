@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using Ardalis.Result;
+using Ardalis.Specification.EntityFrameworkCore;
 using DBManageSystem.Core.Entities;
+using DBManageSystem.Core.Entities.Specifications;
 using DBManageSystem.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBManageSystem.Infrastructure.Services;
 public class RoleService : IRoleService
@@ -20,28 +24,112 @@ public class RoleService : IRoleService
     _logger = logger;
     _roleManager = roleManager;
   }
-  public Task<Result> CreateRole(string roleName)
+  public async Task<Result> CreateRole(string roleName)
   {
-    throw new NotImplementedException();
+    Role role = new Role();
+    role.Name = roleName;
+   var result = await _roleManager.CreateAsync(role);
+    if (result.Succeeded)
+    {
+      return Result.Success();
+    }
+    else
+    {
+      List<string> errors = new List<string>();
+      foreach (var error in result.Errors)
+      {
+        errors.Add(error.Description);
+        _logger?.LogInformation(error.Description);
+
+      }
+      return Result.Error(errors.FirstOrDefault());
+    }
   }
 
-  public Task<Result> DeleteRole(int roleId)
+  public async Task<Result> DeleteRole(int roleId)
   {
-    throw new NotImplementedException();
+    var spec = new RoleByIdSpec(roleId);
+    var roleToDelete = await _roleManager.Roles.WithSpecification(spec).FirstOrDefaultAsync();
+    if(roleToDelete == null)
+    {
+      return Result.Error($"The Role With RoleId {roleId} is Not Found");
+    }
+    else
+    {
+      var result = await _roleManager.DeleteAsync(roleToDelete);
+      if (result.Succeeded)
+      {
+        return Result.Success();
+      }
+      else
+      {
+        List<string> errors = new List<string>();
+        foreach (var error in result.Errors)
+        {
+          errors.Add(error.Description);
+          _logger?.LogInformation(error.Description);
+
+        }
+        return Result.Error(errors.FirstOrDefault());
+      }
+    }
   }
 
-  public Task<Result<Role>> GetRoleByName(string roleName)
+  public async Task<Result<Role>> GetRoleByName(string roleName)
   {
-    throw new NotImplementedException();
+    var spec = new RolesByNameSpec(roleName);
+    var role = await _roleManager.Roles.WithSpecification(spec).FirstOrDefaultAsync();
+    if (role == null)
+    {
+      return Result<Role>.NotFound();
+    }
+    else
+    {
+      return Result<Role>.Success(role);
+    }
   }
 
-  public Task<Result<List<Role>>> GetRoleExceptForAdminAndDefault()
+  public async Task<Result<List<Role>>> GetRoleExceptForAdminAndDefault()
   {
-    throw new NotImplementedException();
+    var spec = new RolesExceptForAdmin();
+    var roles = await _roleManager.Roles.WithSpecification(spec).ToListAsync();
+    return new Result<List<Role>>(roles);
   }
 
-  public Task<Result> SetRoleForUser(int roleId, int userId)
+  public async Task<Result> SetRoleForUser(int roleId, int userId)
   {
-    throw new NotImplementedException();
+    var roleSpec = new RoleByIdSpec(roleId);
+    var userSpec = new UserByIdSpec(userId);
+    var role = await _roleManager.Roles.WithSpecification(roleSpec).FirstOrDefaultAsync();
+    var user = await _userManager.Users.WithSpecification(userSpec).FirstOrDefaultAsync();
+    
+    if(role == null)
+    {
+      return Result.Error($"Role Not Found,RoleId:{roleId}");
+    }
+
+    if(user == null)
+    {
+      return Result.Error($"User Not Found,UserId:{userId}");
+    }
+
+    var rolesInDb = await _userManager.GetRolesAsync(user);
+    await _userManager.RemoveFromRolesAsync(user, rolesInDb);
+    var result = await _userManager.AddToRoleAsync(user, role.Name);
+    if (result.Succeeded)
+    {
+      return Result.Success();
+    }
+    else
+    {
+      List<string> errors = new List<string>();
+      foreach (var error in result.Errors)
+      {
+        errors.Add(error.Description);
+        _logger?.LogInformation(error.Description);
+
+      }
+      return Result.Error(errors.FirstOrDefault());
+    }
   }
 }

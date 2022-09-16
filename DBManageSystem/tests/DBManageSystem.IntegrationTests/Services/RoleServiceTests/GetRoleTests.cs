@@ -26,9 +26,9 @@ public class GetRoleTests : IClassFixture<BaseIdentityTestFixture>
     Role testRole = new Role();
     testRole.Name = testRoleName;
 
-    var t1 = fixture.roleManager.CreateAsync(admin);
-    var t2 = fixture.roleManager.CreateAsync(testRole);
-    Task.WaitAll(t1, t2);
+    fixture.roleManager.CreateAsync(admin).Wait();
+    fixture.roleManager.CreateAsync(testRole).Wait();
+    
     _roleService = new RoleService(Fixture.userManager,Fixture.roleManager,null);
 
   }
