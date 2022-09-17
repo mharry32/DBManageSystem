@@ -23,11 +23,11 @@ public class UserServiceTestLogin : IClassFixture<BaseIdentityTestFixture>
     Fixture = fixture;
   }
 
-  [Fact]
+/*  [Fact]
   public async Task LoginSuccess()
   {
     User user = new User();
-    user.UserName = "testerUser";
+    user.UserName = Fixture.LoginNameForContext;
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
     var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null);
     var result = await userService.Login(user.UserName, UserConstants.DefaultPassword);
@@ -52,7 +52,7 @@ public class UserServiceTestLogin : IClassFixture<BaseIdentityTestFixture>
       Assert.Fail(ex.Message);
     }
 
-  }
+  }*/
 
   [Fact]
   public async Task LoginWithWrongPassword()

@@ -47,7 +47,7 @@ public class GetRoleByUserId : IClassFixture<BaseIdentityTestFixture>
   public async Task GetRoleByUserId_HaveNoRole()
   {
     User user = new User();
-    user.UserName = "testUserRole";
+    user.UserName = "testUserRole2";
 
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
     user = await Fixture.userManager.FindByNameAsync(user.UserName);

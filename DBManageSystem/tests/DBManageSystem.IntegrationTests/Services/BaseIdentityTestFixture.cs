@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac.Core;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace DBManageSystem.IntegrationTests.Services;
 public class BaseIdentityTestFixture : IDisposable
@@ -21,13 +26,14 @@ public class BaseIdentityTestFixture : IDisposable
   public SignInManager<User> signInManager { get; private set; }
 
   public AppIdentityDbContext identityContext { get; private set; }
+
+  public string LoginNameForContext = "User";
   public BaseIdentityTestFixture()
   {
     var serviceProvider = new ServiceCollection();
     serviceProvider.AddLogging(t => t.AddConsole());
     serviceProvider.AddDbContext<AppIdentityDbContext>(options => options.UseMySql(ConnectionString, MySqlServerVersion.LatestSupportedServerVersion));
     serviceProvider.AddIdentity<User, Role>().AddEntityFrameworkStores<AppIdentityDbContext>();
-
 
     var scope = serviceProvider.BuildServiceProvider().CreateScope();
     _serviceProvider = scope.ServiceProvider;
