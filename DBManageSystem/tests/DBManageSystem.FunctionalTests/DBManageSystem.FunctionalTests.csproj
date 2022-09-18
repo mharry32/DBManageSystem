@@ -25,8 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\DBManageSystem.ManageWebAPI\DBManageSystem.ManageWebAPI.csproj" />
     <ProjectReference Include="..\..\src\DBManageSystem.Web\DBManageSystem.Web.csproj" />
     <ProjectReference Include="..\DBManageSystem.UnitTests\DBManageSystem.UnitTests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ApiEndpoints\AuthEndpoints\" />
   </ItemGroup>
 
 </Project>
