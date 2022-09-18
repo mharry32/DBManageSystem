@@ -164,7 +164,8 @@ public class UserService : IUserService
     }
     else
     {
-      return Result.Error();
+      _logger.LogInformation($"User Login Failed.Reason:{result.ToString()}");
+      return Result.Error($"User Login Failed.Reason:{result.ToString()}");
     }
   }
 
