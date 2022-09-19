@@ -15,11 +15,16 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
     <PackageReference Include="SQLite" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\DBManageSystem.Core\DBManageSystem.Core.csproj" />
     <ProjectReference Include="..\DBManageSystem.SharedKernel\DBManageSystem.SharedKernel.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Identity\Migrations\" />
   </ItemGroup>
 </Project>

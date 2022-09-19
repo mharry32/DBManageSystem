@@ -3,6 +3,8 @@ using Autofac;
 using DBManageSystem.Core.Interfaces;
 using DBManageSystem.Core.ProjectAggregate;
 using DBManageSystem.Infrastructure.Data;
+using DBManageSystem.Infrastructure.Logging;
+using DBManageSystem.Infrastructure.Services;
 using DBManageSystem.SharedKernel;
 using DBManageSystem.SharedKernel.Interfaces;
 using MediatR;
@@ -57,6 +59,11 @@ public class DefaultInfrastructureModule : Module
       .As(typeof(IRepository<>))
       .As(typeof(IReadRepository<>))
       .InstancePerLifetimeScope();
+
+    builder.RegisterGeneric(typeof(LoggerAdapter<>)).As(typeof(IAppLogger<>)).InstancePerLifetimeScope();
+
+    builder.RegisterType<RoleService>().As<IRoleService>().InstancePerLifetimeScope();
+    builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
 
     builder
       .RegisterType<Mediator>()
