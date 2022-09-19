@@ -23,7 +23,7 @@ public class CreateUser:IClassFixture<BaseIdentityTestFixture>
   {
     User user = new User();
     user.UserName = "testerUser";
-    UserService userService = new UserService(Fixture.userManager, null, null, null);
+    UserService userService = new UserService(Fixture.userManager, null, null, null, Fixture.defaultPassword, null);
    var result = await userService.CreateUser(user);
     Assert.True(result.IsSuccess);
     var userInDb = Fixture.identityContext.Users.FirstOrDefault(t=>t.UserName == user.UserName);
@@ -37,7 +37,7 @@ public class CreateUser:IClassFixture<BaseIdentityTestFixture>
   {
     User user = new User();
     user.UserName = "testerUser";
-    UserService userService = new UserService(Fixture.userManager, null, null, null);
+    UserService userService = new UserService(Fixture.userManager, null, null, null, Fixture.defaultPassword, null);
    await userService.CreateUser(user);
 
 
@@ -54,7 +54,7 @@ public class CreateUser:IClassFixture<BaseIdentityTestFixture>
   {
     User user = new User();
     user.UserName = "testerUser";
-    UserService userService = new UserService(Fixture.userManager, null, null, null);
+    UserService userService = new UserService(Fixture.userManager, null, null, null, Fixture.defaultPassword, null);
     await userService.CreateUser(user);
 
 

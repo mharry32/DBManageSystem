@@ -9,7 +9,7 @@ using DBManageSystem.Core.Entities;
 namespace DBManageSystem.Core.Interfaces;
 public interface IUserService
 {
-    Task<Result<string>> Login(string username, string password);
+    Task<Result<string>> Login(string username, string password,string loginIP = null);
 
   Task<Result<List<User>>> GetAllUsersExceptForCurrent(int currentUserId);
 

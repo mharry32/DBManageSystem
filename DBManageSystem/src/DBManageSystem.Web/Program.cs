@@ -5,6 +5,7 @@ using DBManageSystem.Core;
 using DBManageSystem.Infrastructure;
 using DBManageSystem.Infrastructure.Data;
 using DBManageSystem.Web;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using Serilog;
 

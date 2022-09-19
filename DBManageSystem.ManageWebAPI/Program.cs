@@ -4,12 +4,15 @@ using DBManageSystem.Core;
 using DBManageSystem.Core.Constants;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Infrastructure;
+using DBManageSystem.Infrastructure.Configs;
 using DBManageSystem.Infrastructure.Data;
 using DBManageSystem.Infrastructure.Identity;
 using DBManageSystem.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -28,12 +31,17 @@ namespace DBManageSystem.ManageWebAPI
 
             builder.Services.AddDbContext<AppIdentityDbContext>(op =>
             {
-                op.UseMySql(builder.Configuration.GetValue<string>("AppIdentityDbConnectString"), MySqlServerVersion.LatestSupportedServerVersion);
+            op.UseMySql(builder.Configuration["AppIdentityDbConnectString"], MySqlServerVersion.LatestSupportedServerVersion);
             });
             builder.Services.AddIdentity<User, Role>()
         .AddEntityFrameworkStores<AppIdentityDbContext>()
         .AddDefaultTokenProviders();
 
+            var jwtsecret = builder.Configuration[JwtSecret.Name];
+            builder.Services.AddSingleton<JwtSecret>(new JwtSecret(jwtsecret));
+
+            var defaultPassword = builder.Configuration[DefaultPassword.Name];
+            builder.Services.AddSingleton<DefaultPassword>(new DefaultPassword(defaultPassword));
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
@@ -80,8 +88,8 @@ namespace DBManageSystem.ManageWebAPI
             });
             // Add services to the container.
 
-
-            var key = Encoding.ASCII.GetBytes(AuthConstants.KEY);
+            
+            var key = Encoding.ASCII.GetBytes(jwtsecret);
             builder.Services.AddAuthentication(config =>
             {
                 config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -119,7 +127,10 @@ namespace DBManageSystem.ManageWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             app.UseAuthorization();
 
 
@@ -132,7 +143,7 @@ namespace DBManageSystem.ManageWebAPI
                     var userManager = scopedProvider.GetRequiredService<UserManager<User>>();
                     var roleManager = scopedProvider.GetRequiredService<RoleManager<Role>>();
                     var identityContext = scopedProvider.GetRequiredService<AppIdentityDbContext>();
-                    var seedTask =  AppIdentityDbContextSeed.SeedAsync(identityContext, userManager, roleManager);
+                    var seedTask =  AppIdentityDbContextSeed.SeedAsync(identityContext, userManager, roleManager,new DefaultPassword(defaultPassword));
                     seedTask.Wait();
                 }
                 catch (Exception ex)

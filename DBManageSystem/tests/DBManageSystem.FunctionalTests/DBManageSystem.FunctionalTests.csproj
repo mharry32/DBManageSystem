@@ -30,8 +30,4 @@
     <ProjectReference Include="..\DBManageSystem.UnitTests\DBManageSystem.UnitTests.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ApiEndpoints\AuthEndpoints\" />
-  </ItemGroup>
-
 </Project>

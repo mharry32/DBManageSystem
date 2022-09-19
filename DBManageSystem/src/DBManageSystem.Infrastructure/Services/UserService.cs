@@ -12,6 +12,7 @@ using DBManageSystem.Core.Constants;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Entities.Specifications;
 using DBManageSystem.Core.Interfaces;
+using DBManageSystem.Infrastructure.Configs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,19 +25,25 @@ public class UserService : IUserService
   private readonly UserManager<User> _userManager;
   private readonly IAppLogger<UserService> _logger;
   private readonly RoleManager<Role> _roleManager;
+  private readonly DefaultPassword _defaultPassword;
+  private readonly JwtSecret _jwtSecret;
 
   public UserService(UserManager<User> userManager,
-        SignInManager<User> signInManager, RoleManager<Role> roleManager,IAppLogger<UserService> logger)
+        SignInManager<User> signInManager, RoleManager<Role> roleManager,IAppLogger<UserService> logger,
+        DefaultPassword defaultPassword,
+        JwtSecret jwtSecret)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _logger = logger;
     _roleManager = roleManager;
+    _jwtSecret = jwtSecret;
+    _defaultPassword = defaultPassword;
   }
 
   public async Task<Result> CreateUser(User user)
   {
-    var result = await _userManager.CreateAsync(user, UserConstants.DefaultPassword);
+    var result = await _userManager.CreateAsync(user, _defaultPassword.Value);
     if (result.Succeeded)
     {
       return Result.Success();
@@ -137,14 +144,16 @@ public class UserService : IUserService
     }
   }
 
-  public async Task<Result<string>> Login(string username, string password)
+  public async Task<Result<string>> Login(string username, string password,string loginIP = null)
   {
     var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
     if (result.Succeeded)
     {
       var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.ASCII.GetBytes(AuthConstants.KEY);
+      var key = Encoding.ASCII.GetBytes(_jwtSecret.Value);
       var user = await _userManager.FindByNameAsync(username);
+      user.LastLoginIP = loginIP;
+     await _userManager.UpdateAsync(user);
       var roles = await _userManager.GetRolesAsync(user);
       var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
 
@@ -164,7 +173,7 @@ public class UserService : IUserService
     }
     else
     {
-      _logger.LogInformation($"User Login Failed.Reason:{result.ToString()}");
+      _logger?.LogInformation($"User Login Failed.Reason:{result.ToString()}");
       return Result.Error($"User Login Failed.Reason:{result.ToString()}");
     }
   }

@@ -60,7 +60,7 @@ public class UserServiceTestLogin : IClassFixture<BaseIdentityTestFixture>
     User user = new User();
     user.UserName = "testerUser2";
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
-    var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null);
+    var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null, Fixture.defaultPassword,Fixture.jwtSecret);
     var result = await userService.Login(user.UserName, UserConstants.DefaultPassword+"a");
     Assert.False(result.IsSuccess);
     Assert.Null(result.Value);

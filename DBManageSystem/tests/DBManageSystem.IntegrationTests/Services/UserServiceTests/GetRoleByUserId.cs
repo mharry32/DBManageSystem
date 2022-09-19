@@ -38,7 +38,7 @@ public class GetRoleByUserId : IClassFixture<BaseIdentityTestFixture>
     var roleInDb = await Fixture.roleManager.FindByNameAsync(role.Name);
     int roleId = roleInDb.Id;
 
-    UserService userService = new UserService(Fixture.userManager, null, Fixture.roleManager, null);
+    UserService userService = new UserService(Fixture.userManager, null, Fixture.roleManager, null, Fixture.defaultPassword, null);
     var result =await userService.GetRoleByUserId(user.Id);
     Assert.Equal(roleId, result.Value.Id);
   }
@@ -52,7 +52,7 @@ public class GetRoleByUserId : IClassFixture<BaseIdentityTestFixture>
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
     user = await Fixture.userManager.FindByNameAsync(user.UserName);
 
-    UserService userService = new UserService(Fixture.userManager, null, Fixture.roleManager,null);
+    UserService userService = new UserService(Fixture.userManager, null, Fixture.roleManager,null, Fixture.defaultPassword, null);
     var result = await userService.GetRoleByUserId(user.Id);
     Assert.Equal(RoleConstants.DEFAULT,result.Value.Id);
     Assert.Equal(RoleConstants.DEFAULT_ROLENAME, result.Value.Name);

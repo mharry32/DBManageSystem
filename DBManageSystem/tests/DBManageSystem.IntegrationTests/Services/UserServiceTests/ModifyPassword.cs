@@ -28,7 +28,7 @@ public class ModifyPassword : IClassFixture<BaseIdentityTestFixture>
     var newPassword = UserConstants.DefaultPassword + "a";
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
     user = await Fixture.userManager.FindByNameAsync(user.UserName);
-    var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null);
+    var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null,Fixture.defaultPassword,null);
 
     var result = await userService.ModifyPassword(user.Id, UserConstants.DefaultPassword, newPassword);
     Assert.True(result.IsSuccess);
@@ -46,7 +46,7 @@ public class ModifyPassword : IClassFixture<BaseIdentityTestFixture>
     var newPassword = "aaa";
     await Fixture.userManager.CreateAsync(user, UserConstants.DefaultPassword);
     user = await Fixture.userManager.FindByNameAsync(user.UserName);
-    var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null);
+    var userService = new UserService(Fixture.userManager, Fixture.signInManager, Fixture.roleManager, null, Fixture.defaultPassword, null);
 
     var result = await userService.ModifyPassword(user.Id, UserConstants.DefaultPassword, newPassword);
     Assert.False(result.IsSuccess);

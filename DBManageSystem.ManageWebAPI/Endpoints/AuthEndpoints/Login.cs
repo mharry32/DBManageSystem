@@ -23,7 +23,20 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints
 ]
         public override async Task<ActionResult<LoginResponse>> HandleAsync(LoginRequest request, CancellationToken cancellationToken = default)
         {
-            var result = await _userService.Login(request.UserName, request.Password);
+            string ipaddress = null;
+            if (Request.HttpContext.Connection.RemoteIpAddress != null) {
+                
+                if (Request.HttpContext.Connection.RemoteIpAddress.IsIPv4MappedToIPv6)
+                {
+                    ipaddress = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+                }
+                else
+                {
+                   ipaddress =  Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                }
+            }
+            
+            var result = await _userService.Login(request.UserName, request.Password, ipaddress);
             if (result.IsSuccess)
             {
                 LoginResponse response = new LoginResponse(result.Value);
