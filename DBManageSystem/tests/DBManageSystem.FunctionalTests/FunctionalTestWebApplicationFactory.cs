@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ardalis.HttpClientTestExtensions;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Interfaces;
 using DBManageSystem.FunctionalTests.ApiEndpoints.AuthEndpoints;
 using DBManageSystem.Infrastructure.Configs;
 using DBManageSystem.Infrastructure.Data;
 using DBManageSystem.Infrastructure.Identity;
+using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
 using DBManageSystem.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Xunit;
 
 namespace DBManageSystem.FunctionalTests;
 public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactory<TStartup> where TStartup : class
@@ -58,6 +62,7 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
         userManager.CreateAsync(userTestLogin, IdentityTestingConstants.TestLoginPassword).Wait();
 
         User userTestModifyPassword = new User();
+        userTestModifyPassword.Id = IdentityTestingConstants.TestModifyPassWordUserId;
         userTestModifyPassword.UserName = IdentityTestingConstants.TestModifyPassword_UserName;
         userManager.CreateAsync(userTestModifyPassword,IdentityTestingConstants.TestModifyPassword_OldPassword).Wait();
 
@@ -73,6 +78,23 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
 
     return host;
   }
+
+
+  public async Task<string> GetAuthToken(HttpClient client)
+  {
+    LoginRequest loginRequest = new LoginRequest()
+    {
+      UserName = IdentityTestingConstants.TestLoginUserName,
+      Password = IdentityTestingConstants.TestLoginPassword
+    };
+    var request = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
+    var result = await client.PostAndDeserializeAsync<LoginResponse>(LoginRequest.Routes, request);
+
+    return result.Token;
+
+
+  }
+
 
 
   protected override void ConfigureWebHost(IWebHostBuilder builder)

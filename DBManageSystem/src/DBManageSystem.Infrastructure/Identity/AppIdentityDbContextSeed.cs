@@ -18,7 +18,7 @@ public class AppIdentityDbContextSeed
     DefaultPassword defaultPassword)
   {
 
-
+      
       identityDbContext.Database.Migrate();
 
     var rolespec = new RoleByIdSpec(RoleConstants.ADMINISTRATOR);

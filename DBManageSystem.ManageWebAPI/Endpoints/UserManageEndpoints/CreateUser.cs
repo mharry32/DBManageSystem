@@ -1,27 +1,32 @@
 ﻿using Ardalis.ApiEndpoints;
-using Ardalis.Result;
+using AutoMapper;
+using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ardalis.Result;
-namespace DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints
+
+namespace DBManageSystem.ManageWebAPI.Endpoints.UserManageEndpoints
 {
-    public class ModifyPassword : EndpointBaseAsync.WithRequest<ModifyPasswordRequest>.WithActionResult
+    public class CreateUser:EndpointBaseAsync.WithRequest<CreateUserRequest>.WithActionResult
     {
+        private readonly IMapper _mapper;
         private readonly IUserService _userService;
-        public ModifyPassword(IUserService userService)
+        public CreateUser(IUserService userService,IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
-        [HttpPost(ModifyPasswordRequest.Route)]
+
+        [HttpPost(CreateUserRequest.Route)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public override async Task<ActionResult> HandleAsync(ModifyPasswordRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult> HandleAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
         {
-            var result = await _userService.ModifyPassword(request.UserId, request.OldPassword, request.NewPassword);
+            var user = _mapper.Map<User>(request);
+            var result = await _userService.CreateUser(user);
             if (result.IsSuccess)
             {
                 return Ok();

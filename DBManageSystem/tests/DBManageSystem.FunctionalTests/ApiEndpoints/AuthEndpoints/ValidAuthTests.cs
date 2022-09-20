@@ -66,9 +66,48 @@ public class ValidAuthTests:IClassFixture<FunctionalTestWebApplicationFactory<Ma
     }
   }
 
+  private async Task<string> GetAuthToken()
+  {
+    LoginRequest loginRequest = new LoginRequest()
+    {
+      UserName = IdentityTestingConstants.TestLoginUserName,
+      Password = IdentityTestingConstants.TestLoginPassword
+    };
+    var request = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
+    var result = await _client.PostAndDeserializeAsync<LoginResponse>(LoginRequest.Routes, request);
+
+    return result.Token;
+
+
+  }
+
   [Fact]
   public async Task PerformModifyPassword()
   {
+    ModifyPasswordRequest modifyPasswordRequest = new ModifyPasswordRequest()
+    {
+      UserId = IdentityTestingConstants.TestModifyPassWordUserId,
+      OldPassword = IdentityTestingConstants.TestModifyPassword_OldPassword,
+      NewPassword = IdentityTestingConstants.TestModifyPassword_NewPassword
+    };
+    var token = await GetAuthToken();
 
+    _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+    var request = new StringContent(JsonConvert.SerializeObject(modifyPasswordRequest), Encoding.UTF8, "application/json");
+
+    var result = await _client.PostAsync(ModifyPasswordRequest.Route, request);
+
+    Assert.True(result.IsSuccessStatusCode);
+
+    LoginRequest loginRequest = new LoginRequest()
+    {
+      UserName = IdentityTestingConstants.TestModifyPassword_UserName,
+      Password = IdentityTestingConstants.TestModifyPassword_NewPassword
+    };
+
+    var reloginRequest = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
+    var reloginResult = await _client.PostAndDeserializeAsync<LoginResponse>(LoginRequest.Routes, reloginRequest);
+
+    Assert.NotNull(reloginResult.Token);
   }
 }

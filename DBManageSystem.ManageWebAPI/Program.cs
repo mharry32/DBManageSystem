@@ -17,6 +17,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using AutoMapper;
+using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
 
 namespace DBManageSystem.ManageWebAPI
 {
@@ -45,7 +47,7 @@ namespace DBManageSystem.ManageWebAPI
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
-
+            builder.Services.AddAutoMapper(typeof(Login));
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DBManageSystem API", Version = "v1" });
