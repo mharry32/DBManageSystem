@@ -25,7 +25,7 @@ public static class HttpClientHelper
     }
     else if (method == HttpMethod.Delete)
     {
-      result = await client.DeleteAsync(route);
+      result = await client.DeleteAsync(route+"/"+data);
     }
     else if (method == HttpMethod.Get)
     {
@@ -54,7 +54,7 @@ public static class HttpClientHelper
     }
     else if (method == HttpMethod.Delete)
     {
-      result = await client.DeleteAsync(route);
+      result = await client.DeleteAsync(route + "/" + data);
     }
     else if (method == HttpMethod.Get)
     {
