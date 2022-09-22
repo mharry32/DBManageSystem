@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.HttpClientTestExtensions;
+using DBManageSystem.Core.Constants;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Interfaces;
 using DBManageSystem.FunctionalTests.ApiEndpoints.AuthEndpoints;
@@ -46,7 +47,7 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
           .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
 
       var userManager = scopedServices.GetRequiredService<UserManager<User>>();
-
+      var roleManager = scopedServices.GetRequiredService<RoleManager<Role>>();
       db.Database.EnsureDeleted();
       // Ensure the database is created.
       db.Database.EnsureCreated();
@@ -65,6 +66,11 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
         userTestModifyPassword.Id = IdentityTestingConstants.TestModifyPassWordUserId;
         userTestModifyPassword.UserName = IdentityTestingConstants.TestModifyPassword_UserName;
         userManager.CreateAsync(userTestModifyPassword,IdentityTestingConstants.TestModifyPassword_OldPassword).Wait();
+
+        Role adminRole = new Role();
+        adminRole.Id = RoleConstants.ADMINISTRATOR;
+        adminRole.Name = RoleConstants.ADMINISTRATOR_ROLENAME;
+        roleManager.CreateAsync(adminRole).Wait();
 
         IdentitySeedData.PopulateTestData(db);
         //}
