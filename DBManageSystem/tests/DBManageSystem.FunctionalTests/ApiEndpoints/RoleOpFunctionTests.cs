@@ -28,6 +28,7 @@ public class RoleOpFunctionTests:IClassFixture<FunctionalTestWebApplicationFacto
   [Fact]
   public async Task BasicRoleFunctionTest()
   {
+    //crud of role
     CreateRoleRequest createRoleRequest = new CreateRoleRequest();
     createRoleRequest.RoleName = "testRole";
     await _client.TestWithoutAuthorize<CreateRoleRequest>(createRoleRequest, "/role", HttpMethod.Post);
