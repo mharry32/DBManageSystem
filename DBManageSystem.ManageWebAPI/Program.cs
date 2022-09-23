@@ -30,6 +30,10 @@ namespace DBManageSystem.ManageWebAPI
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             builder.Logging.AddConsole();
 
+            builder.Services.AddDbContext<DbManageSysDbContext>(op =>
+            {
+                op.UseMySql(builder.Configuration["DbManageSysDbConnectString"], MySqlServerVersion.LatestSupportedServerVersion);
+            });
 
             builder.Services.AddDbContext<AppIdentityDbContext>(op =>
             {

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DBManageSystem.Core.Entities.MenuAggregate;
+using DBManageSystem.SharedKernel;
 using DBManageSystem.SharedKernel.Interfaces;
 
 namespace DBManageSystem.Core.Entities;
-public class RoleMenu:IAggregateRoot
+public class RoleMenu:EntityBase,IAggregateRoot
 {
   private RoleMenu() { }
 
