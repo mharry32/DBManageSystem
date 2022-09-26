@@ -31,6 +31,10 @@ namespace DBManageSystem.FunctionalTests;
 public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactory<TStartup> where TStartup : class
 {
   private readonly string testAppIdentityDbConnectString = "Server=localhost;Database=dbtest;Uid=root;Pwd=1995072132Mh.;charset=UTF8";
+
+  private AppIdentityDbContext _identityDbContext;
+  private DbManageSysDbContext _dbManageSysDbContext;
+
   protected override IHost CreateHost(IHostBuilder builder)
   {
     builder.UseEnvironment("Development"); // will not send real emails
@@ -44,18 +48,18 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
     using (var scope = serviceProvider.CreateScope())
     {
       var scopedServices = scope.ServiceProvider;
-      var db = scopedServices.GetRequiredService<AppIdentityDbContext>();
-      var appdb = scopedServices.GetRequiredService<DbManageSysDbContext>();
+      _identityDbContext = scopedServices.GetRequiredService<AppIdentityDbContext>();
+      _dbManageSysDbContext = scopedServices.GetRequiredService<DbManageSysDbContext>();
       var logger = scopedServices
           .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
 
       var userManager = scopedServices.GetRequiredService<UserManager<User>>();
       var roleManager = scopedServices.GetRequiredService<RoleManager<Role>>();
-      db.Database.EnsureDeleted();
+      //db.Database.EnsureDeleted();
       // Ensure the database is created.
-      db.Database.EnsureCreated();
+      _identityDbContext.Database.EnsureCreated();
 
-      var databaseCreator = appdb.GetService<IRelationalDatabaseCreator>();
+      var databaseCreator = _dbManageSysDbContext.GetService<IRelationalDatabaseCreator>();
       databaseCreator.CreateTables();
 
 
@@ -83,8 +87,8 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
         var userToAddAdmin = userManager.FindByNameAsync(userTestLogin.UserName).GetAwaiter().GetResult();
         userManager.AddToRolesAsync(userToAddAdmin, new List<string> { RoleConstants.ADMINISTRATOR_ROLENAME }).Wait();
 
-        IdentitySeedData.PopulateTestData(db);
-        DbManageSysDBSeed.SeedAsync(appdb).Wait();
+/*        IdentitySeedData.PopulateTestData(db);
+        DbManageSysDBSeed.SeedAsync(appdb).Wait();*/
         //}
       }
       catch (Exception ex)
@@ -162,5 +166,11 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
           services.AddSingleton<JwtSecret>(new JwtSecret(IdentityTestingConstants.TestJwtSecret));
 
         });
+  }
+
+  protected override void Dispose(bool disposing)
+  {
+    _identityDbContext.Database.EnsureDeleted();
+    base.Dispose(disposing);
   }
 }

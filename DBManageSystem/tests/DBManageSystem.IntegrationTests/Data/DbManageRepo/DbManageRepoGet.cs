@@ -29,9 +29,7 @@ public class DbManageRepoGet : IClassFixture<BaseDbManageRepoTestFixture>
   public async Task GetAllSubMenu()
   {
     MainMenu mainMenu = new MainMenu("m1", 1);
-    mainMenu.Id = 1;
     SubMenu subMenu = new SubMenu("/m1/s1", mainMenu, "s1", 1);
-    subMenu.Id = 1;
     mainMenu.AddSubMenu(subMenu);
 
     await _mainMenuRepo.AddAsync(mainMenu);
