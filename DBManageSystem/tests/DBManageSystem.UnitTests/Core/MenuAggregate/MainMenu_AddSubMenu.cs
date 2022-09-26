@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DBManageSystem.Core.Entities.MenuAggregate;
 using Xunit;
 
 namespace DBManageSystem.UnitTests.Core.MenuAggregate;

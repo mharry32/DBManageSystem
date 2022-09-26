@@ -19,7 +19,6 @@ public class BaseDbManageRepoTestFixture:IDisposable
     var builder = new DbContextOptionsBuilder<DbManageSysDbContext>();
     builder.UseMySql(ConnectionString, MySqlServerVersion.LatestSupportedServerVersion);
     _dbContext = new DbManageSysDbContext(builder.Options);
-
     _dbContext.Database.EnsureCreated();
   } 
 

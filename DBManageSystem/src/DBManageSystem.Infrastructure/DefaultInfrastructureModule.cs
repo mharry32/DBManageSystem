@@ -55,7 +55,7 @@ public class DefaultInfrastructureModule : Module
 
   private void RegisterCommonDependencies(ContainerBuilder builder)
   {
-    builder.RegisterGeneric(typeof(EfRepository<>))
+    builder.RegisterGeneric(typeof(DbManageSysRepository<>))
       .As(typeof(IRepository<>))
       .As(typeof(IReadRepository<>))
       .InstancePerLifetimeScope();

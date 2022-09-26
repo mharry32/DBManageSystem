@@ -49,8 +49,8 @@ namespace DBManageSystem.ManageWebAPI
             var defaultPassword = builder.Configuration[DefaultPassword.Name];
             builder.Services.AddSingleton<DefaultPassword>(new DefaultPassword(defaultPassword));
 
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(DbManageSysRepository<>));
+            builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DbManageSysRepository<>));
             builder.Services.AddAutoMapper(typeof(Login));
             builder.Services.AddSwaggerGen(c =>
             {

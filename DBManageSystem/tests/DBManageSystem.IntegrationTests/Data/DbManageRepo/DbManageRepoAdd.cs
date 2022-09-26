@@ -64,4 +64,5 @@ public class DbManageRepoAdd:IClassFixture<BaseDbManageRepoTestFixture>
     Assert.Equal(roleMenu.SubMenuId, roleMenuInDB.SubMenuId);
 
   }
+
 }

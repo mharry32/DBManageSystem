@@ -7,6 +7,7 @@ using Ardalis.HttpClientTestExtensions;
 using DBManageSystem.Core.Constants;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Interfaces;
+using DBManageSystem.FunctionalTests.ApiEndpoints;
 using DBManageSystem.FunctionalTests.ApiEndpoints.AuthEndpoints;
 using DBManageSystem.Infrastructure.Configs;
 using DBManageSystem.Infrastructure.Data;
@@ -18,6 +19,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -42,7 +45,7 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
     {
       var scopedServices = scope.ServiceProvider;
       var db = scopedServices.GetRequiredService<AppIdentityDbContext>();
-
+      var appdb = scopedServices.GetRequiredService<DbManageSysDbContext>();
       var logger = scopedServices
           .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
 
@@ -51,6 +54,11 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
       db.Database.EnsureDeleted();
       // Ensure the database is created.
       db.Database.EnsureCreated();
+
+      var databaseCreator = appdb.GetService<IRelationalDatabaseCreator>();
+      databaseCreator.CreateTables();
+
+
 
       try
       {
@@ -72,7 +80,11 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
         adminRole.Name = RoleConstants.ADMINISTRATOR_ROLENAME;
         roleManager.CreateAsync(adminRole).Wait();
 
+        var userToAddAdmin = userManager.FindByNameAsync(userTestLogin.UserName).GetAwaiter().GetResult();
+        userManager.AddToRolesAsync(userToAddAdmin, new List<string> { RoleConstants.ADMINISTRATOR_ROLENAME }).Wait();
+
         IdentitySeedData.PopulateTestData(db);
+        DbManageSysDBSeed.SeedAsync(appdb).Wait();
         //}
       }
       catch (Exception ex)
@@ -118,12 +130,26 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
             services.Remove(descriptor);
           }
 
+          var appDbDescriptor = services.SingleOrDefault(
+            d => d.ServiceType ==
+     typeof(DbContextOptions<DbManageSysDbContext>));
+
+          if (appDbDescriptor != null)
+          {
+            services.Remove(appDbDescriptor);
+          }
+
           // Add ApplicationDbContext using an in-memory database for testing.
           services.AddDbContext<AppIdentityDbContext>(options =>
           {
             options.UseMySql(testAppIdentityDbConnectString, MySqlServerVersion.LatestSupportedServerVersion);
           });
 
+          services.AddDbContext<DbManageSysDbContext>(options =>
+          {
+            options.UseMySql(testAppIdentityDbConnectString, MySqlServerVersion.LatestSupportedServerVersion);
+
+          });
 
           var jwtSecretServiceDescriptor = services.SingleOrDefault(
             d => d.ServiceType == typeof(JwtSecret));
