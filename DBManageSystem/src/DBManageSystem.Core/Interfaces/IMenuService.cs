@@ -10,7 +10,7 @@ using DBManageSystem.Core.Entities.MenuAggregate;
 namespace DBManageSystem.Core.Interfaces;
 public interface IMenuService
 {
-  public Task<Result<List<SubMenu>>> GetMenusForRole(Role role);
+  public Task<Result<List<SubMenu>>> GetMenusForRole(int roleId);
 
   public Task<Result<List<SubMenu>>> GetAllMenus();
 

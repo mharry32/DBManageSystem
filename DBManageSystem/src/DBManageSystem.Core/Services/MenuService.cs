@@ -30,9 +30,9 @@ public class MenuService : IMenuService
     return new Result<List<SubMenu>>(await _subMenuRepository.ListAsync(new SubMenusWithMainMenuSpec()));
   }
 
-  public async Task<Result<List<SubMenu>>> GetMenusForRole(Role role)
+  public async Task<Result<List<SubMenu>>> GetMenusForRole(int roleId)
   {
-    var roleMenuSpec = new RoleMenusByRoleIdSpec(role.Id);
+    var roleMenuSpec = new RoleMenusByRoleIdSpec(roleId);
     var roleMenus = await _roleMenuRepository.ListAsync(roleMenuSpec);
     var subMenus = new List<SubMenu>();
 

@@ -88,7 +88,7 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
         userManager.AddToRolesAsync(userToAddAdmin, new List<string> { RoleConstants.ADMINISTRATOR_ROLENAME }).Wait();
 
         /*IdentitySeedData.PopulateTestData(db);*/
-        //DbManageSysDBSeed.SeedAsync(_dbManageSysDbContext).Wait();
+        DbManageSysDBSeed.SeedAsync(_dbManageSysDbContext).Wait();
         //}
       }
       catch (Exception ex)

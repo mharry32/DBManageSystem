@@ -40,7 +40,7 @@ public class GetMenusForRole
       ReturnsAsync(subMenu[0]).ReturnsAsync(subMenu[1]);
 
     var menuService = new MenuService(_mockSubMenuRepo.Object, _mockRoleMenuRepo.Object);
-    var result = await menuService.GetMenusForRole(role);
+    var result = await menuService.GetMenusForRole(role.Id);
     Assert.NotNull(result.Value);
     Assert.Equal<int>(1, result.Value[0].Id);
     Assert.Equal<int>(2, result.Value[1].Id);
@@ -69,7 +69,7 @@ public class GetMenusForRole
       ReturnsAsync(subMenu[0]).ReturnsAsync(default(SubMenu));
 
     var menuService = new MenuService(_mockSubMenuRepo.Object, _mockRoleMenuRepo.Object);
-    var result = await menuService.GetMenusForRole(role);
+    var result = await menuService.GetMenusForRole(role.Id);
     Assert.True(!result.IsSuccess);
     Assert.NotEmpty(result.Errors);
   }
