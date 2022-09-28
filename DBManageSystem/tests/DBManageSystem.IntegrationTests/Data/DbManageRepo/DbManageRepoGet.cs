@@ -7,22 +7,27 @@ using DBManageSystem.Core.Entities.MenuAggregate;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Infrastructure.Data;
 using Xunit;
+using DBManageSystem.SharedKernel.Interfaces;
+using DBManageSystem.Core.Entities.MenuAggregate.Specifications;
 
 namespace DBManageSystem.IntegrationTests.Data.DbManageRepo;
 
 [Collection("DbManageRepoGet")]
 public class DbManageRepoGet : IClassFixture<BaseDbManageRepoTestFixture>
 {
-  private DbManageSysRepository<MainMenu> _mainMenuRepo;
+  private IRepository<MainMenu> _mainMenuRepo;
 
-  private DbManageSysRepository<SubMenu> _subMenuRepo;
+  private IRepository<SubMenu> _subMenuRepo;
 
-  private DbManageSysRepository<RoleMenu> _roleMenuRepo;
+  private IRepository<RoleMenu> _roleMenuRepo;
+
+  private DbManageSysDbContext _context;
   public DbManageRepoGet(BaseDbManageRepoTestFixture fixture)
   {
     _mainMenuRepo = new DbManageSysRepository<MainMenu>(fixture._dbContext);
     _subMenuRepo = new DbManageSysRepository<SubMenu>(fixture._dbContext);
     _roleMenuRepo = new DbManageSysRepository<RoleMenu>(fixture._dbContext);
+    _context = fixture._dbContext;
   }
 
   [Fact]
@@ -31,13 +36,16 @@ public class DbManageRepoGet : IClassFixture<BaseDbManageRepoTestFixture>
     MainMenu mainMenu = new MainMenu("m1", 1);
     SubMenu subMenu = new SubMenu("/m1/s1", mainMenu, "s1", 1);
     mainMenu.AddSubMenu(subMenu);
+    _context.ChangeTracker.QueryTrackingBehavior = Microsoft.EntityFrameworkCore.QueryTrackingBehavior.NoTracking;
 
-    await _mainMenuRepo.AddAsync(mainMenu);
+    _context.Add(mainMenu);
+    _context.SaveChanges();
+    //await _mainMenuRepo.AddAsync(mainMenu);
+    var subMenus = await _subMenuRepo.ListAsync(new SubMenusWithMainMenuSpec());
 
-    var subMenus = await _subMenuRepo.ListAsync();
-
-    Assert.Equal(subMenu.Id, subMenus.FirstOrDefault().Id);
-    Assert.NotNull(subMenus.FirstOrDefault().MainMenu);
-    Assert.Equal(subMenu.MainMenu.Id, subMenus.FirstOrDefault().MainMenu.Id);
+    var targetSubMenu = subMenus.FirstOrDefault(t => t.Name == subMenu.Name);
+    Assert.NotNull(targetSubMenu);
+    Assert.NotNull(targetSubMenu.MainMenu);
+    Assert.Equal(targetSubMenu.MainMenu.Name, mainMenu.Name);
   }
 }

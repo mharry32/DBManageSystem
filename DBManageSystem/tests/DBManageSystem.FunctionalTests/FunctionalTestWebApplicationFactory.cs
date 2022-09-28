@@ -55,7 +55,7 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
 
       var userManager = scopedServices.GetRequiredService<UserManager<User>>();
       var roleManager = scopedServices.GetRequiredService<RoleManager<Role>>();
-      //db.Database.EnsureDeleted();
+      _identityDbContext.Database.EnsureDeleted();
       // Ensure the database is created.
       _identityDbContext.Database.EnsureCreated();
 
@@ -87,8 +87,8 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
         var userToAddAdmin = userManager.FindByNameAsync(userTestLogin.UserName).GetAwaiter().GetResult();
         userManager.AddToRolesAsync(userToAddAdmin, new List<string> { RoleConstants.ADMINISTRATOR_ROLENAME }).Wait();
 
-/*        IdentitySeedData.PopulateTestData(db);
-        DbManageSysDBSeed.SeedAsync(appdb).Wait();*/
+        /*IdentitySeedData.PopulateTestData(db);*/
+        //DbManageSysDBSeed.SeedAsync(_dbManageSysDbContext).Wait();
         //}
       }
       catch (Exception ex)
@@ -166,11 +166,5 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
           services.AddSingleton<JwtSecret>(new JwtSecret(IdentityTestingConstants.TestJwtSecret));
 
         });
-  }
-
-  protected override void Dispose(bool disposing)
-  {
-    _identityDbContext.Database.EnsureDeleted();
-    base.Dispose(disposing);
   }
 }

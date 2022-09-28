@@ -30,7 +30,7 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.MenuEndpoints
             List<MainMenuDTO> result = new List<MainMenuDTO>();
             foreach(var group in menuGroups)
             {
-                var mainMenu = subMenus.FirstOrDefault(s => s.MainMenu.Id == group.Key);
+                var mainMenu = subMenus.FirstOrDefault(s => s.MainMenu.Id == group.Key).MainMenu;
                 MainMenuDTO mainMenuDTO = new MainMenuDTO()
                 {
                     Id = mainMenu.Id,

@@ -26,7 +26,8 @@ public class MenuService : IMenuService
   }
   public async Task<Result<List<SubMenu>>> GetAllMenus()
   {
-    return new Result<List<SubMenu>>(await _subMenuRepository.ListAsync());
+
+    return new Result<List<SubMenu>>(await _subMenuRepository.ListAsync(new SubMenusWithMainMenuSpec()));
   }
 
   public async Task<Result<List<SubMenu>>> GetMenusForRole(Role role)
