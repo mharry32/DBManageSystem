@@ -44,11 +44,24 @@ public class MenuOpFunctionTests : IClassFixture<FunctionalTestWebApplicationFac
     Assert.Equal(MenuConstants.DB_REPORT_SUB_NAME, menus[0].SubMenus[1].Name);
     Assert.Equal(MenuConstants.DB_REPORT_SUB_PATH, menus[0].SubMenus[1].Path);
 
+  }
 
+  [Fact]
+  public async Task GetMenusForRole()
+  {
+    await _client.TestWithoutAuthorize<object>(null, $"/users/menusbyrole/{RoleConstants.ADMINISTRATOR}", HttpMethod.Get);
 
+    var data = await _client.TestWithAuthorizeUsingJWT<object>(null, $"/users/menusbyrole/{RoleConstants.ADMINISTRATOR}", HttpMethod.Get, token);
 
+    var json = await data.Content.ReadAsStringAsync();
+    var menus = JsonSerializer.Deserialize<List<MainMenuDTO>>(json, Constants.DefaultJsonOptions);
 
+    Assert.Contains(menus, m => m.Name == MenuConstants.ACCOUNT_MANAGE_MAIN_NAME);
+    Assert.Contains(menus, m => m.Name == MenuConstants.DB_MANAGE_MAIN_NAME);
 
+    Assert.Equal(MenuConstants.DB_MONITOR_SUB_NAME, menus[0].SubMenus[0].Name);
+    Assert.Equal(MenuConstants.DB_REPORT_SUB_NAME, menus[0].SubMenus[1].Name);
+    Assert.Equal(MenuConstants.DB_REPORT_SUB_PATH, menus[0].SubMenus[1].Path);
   }
 
 }
