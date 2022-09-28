@@ -62,4 +62,62 @@ public class MenuOpFunctionTests : IClassFixture<FunctionalTestWebApplicationFac
 
   }
 
+
+  [Fact]
+  public async Task ModifyMenus()
+  {
+    //first,we need to acquire menus to modify 
+    var data = await _client.TestWithAuthorizeUsingJWT<object>(null, "/users/allmenus", HttpMethod.Get, token);
+
+    var json = await data.Content.ReadAsStringAsync();
+    var menus = JsonSerializer.Deserialize<List<MainMenuDTO>>(json, Constants.DefaultJsonOptions);
+
+    //then,make the request
+    ModifyMenusRequest request = new ModifyMenusRequest();
+    request.RoleId = DbManageSysDBSeed.testRoleId;
+    request.MenuIds = new List<int>();
+
+    foreach(var mainMenu in menus)
+    {
+      foreach(var subMenu in mainMenu.SubMenus)
+      {
+        if(subMenu.Name == DbManageSysDBSeed.testSubMenu||subMenu.Name==DbManageSysDBSeed.testModifySubMenu)
+        {
+          request.MenuIds.Add(subMenu.Id);
+        }
+
+      }
+    }
+
+    //test without authorize
+    await _client.TestWithoutAuthorize<ModifyMenusRequest>(request, ModifyMenusRequest.Route, HttpMethod.Put);
+
+    //test under authorize
+    var result = await _client.TestWithAuthorizeUsingJWT<ModifyMenusRequest>(request, ModifyMenusRequest.Route, HttpMethod.Put, token);
+
+    Assert.True(result.IsSuccessStatusCode);
+
+    //get menus after modified
+    data = await _client.TestWithAuthorizeUsingJWT<object>(null, $"/users/menusbyrole/{DbManageSysDBSeed.testRoleId}", HttpMethod.Get, token);
+
+    json = await data.Content.ReadAsStringAsync();
+    var menusAfterModified = JsonSerializer.Deserialize<List<MainMenuDTO>>(json, Constants.DefaultJsonOptions);
+
+    //check main menus
+    Assert.Contains(menusAfterModified, t => t.Name == DbManageSysDBSeed.testMainMenu);
+    Assert.Contains(menusAfterModified, t => t.Name == DbManageSysDBSeed.testModifyMainMenu);
+
+    var subMenusAfterModified = new List<SubMenuDTO>();
+
+    foreach(var menu in menusAfterModified)
+    {
+      subMenusAfterModified.AddRange(menu.SubMenus);
+    }
+
+    //check sub menus
+    Assert.Contains(subMenusAfterModified, t => t.Name == DbManageSysDBSeed.testSubMenu);
+    Assert.Contains(subMenusAfterModified, t => t.Name == DbManageSysDBSeed.testModifySubMenu);
+
+  }
+
 }

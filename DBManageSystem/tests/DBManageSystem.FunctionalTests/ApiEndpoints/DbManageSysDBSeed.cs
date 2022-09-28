@@ -18,6 +18,11 @@ public class DbManageSysDBSeed
     MainMenu tmm = new MainMenu(testMainMenu, 100);
     tmm.AddSubMenu(new SubMenu(testSubMenu, tmm, testSubMenu, 1));
     context.mainMenus.Add(tmm);
+
+    MainMenu tmdm = new MainMenu(testModifyMainMenu, 101);
+    tmdm.AddSubMenu(new SubMenu(testModifySubMenu, tmdm, testModifySubMenu, 1));
+    context.mainMenus.Add(tmdm);
+
     context.SaveChanges();
 
     var submenu = context.subMenus.FirstOrDefault(t => t.Name == testSubMenu);
@@ -31,5 +36,9 @@ public class DbManageSysDBSeed
   public const string testMainMenu = "testMainMenu";
 
   public const string testSubMenu = "testSubMenu";
+
+  public const string testModifyMainMenu = "testModifyMainMenu";
+
+  public const string testModifySubMenu = "testModifySubMenu";
 
 }
