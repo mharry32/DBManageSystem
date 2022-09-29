@@ -54,12 +54,23 @@ public class MenuOpFunctionTests : IClassFixture<FunctionalTestWebApplicationFac
     var data = await _client.TestWithAuthorizeUsingJWT<object>(null, $"/users/menusbyrole/{DbManageSysDBSeed.testRoleId}", HttpMethod.Get, token);
 
     var json = await data.Content.ReadAsStringAsync();
+    var menus = JsonSerializer.Deserialize<List<int>>(json, Constants.DefaultJsonOptions);
+
+    Assert.Contains(menus, m => m == DbManageSysDBSeed.subMenuId);
+
+  }
+
+  [Fact]
+  public async Task GetMenusForUser()
+  {
+    await _client.TestWithoutAuthorize<object>(null, "/admin/menus", HttpMethod.Get);
+
+    var data = await _client.TestWithAuthorizeUsingJWT<object>(null, "/admin/menus", HttpMethod.Get, token);
+
+    var json = await data.Content.ReadAsStringAsync();
     var menus = JsonSerializer.Deserialize<List<MainMenuDTO>>(json, Constants.DefaultJsonOptions);
 
     Assert.Contains(menus, m => m.Name == DbManageSysDBSeed.testMainMenu);
-
-    Assert.Equal(DbManageSysDBSeed.testSubMenu, menus[0].SubMenus[0].Name);
-
   }
 
 

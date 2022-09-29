@@ -18,9 +18,14 @@ public class AppIdentityDbContextSeed
     DefaultPassword defaultPassword)
   {
 
-      
+    try
+    {
       identityDbContext.Database.Migrate();
+    }
+    catch(Exception ex)
+    {
 
+    }
     var rolespec = new RoleByIdSpec(RoleConstants.ADMINISTRATOR);
     var roleInDb = await identityDbContext.Roles.WithSpecification(rolespec).FirstOrDefaultAsync();
     if (roleInDb == null)

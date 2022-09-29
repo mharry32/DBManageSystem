@@ -1,32 +1,39 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using DBManageSystem.Core.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace DBManageSystem.ManageWebAPI.Endpoints.MenuEndpoints
 {
-    public class GetAllMenu : EndpointBaseAsync.WithoutRequest.WithActionResult<List<MainMenuDTO>>
+
+    public class GetMenusForUser : EndpointBaseAsync.WithoutRequest.WithActionResult<List<MainMenuDTO>>
     {
         private IMenuService _menuService;
         private IMapper _mapper;
-        public GetAllMenu(IMenuService menuService,IMapper mapper)
+        private readonly IUserService _userService;
+        public GetMenusForUser(IMenuService menuService, IMapper mapper,IUserService userService)
         {
             _menuService = menuService;
             _mapper = mapper;
+            _userService = userService;
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("/users/allmenus")]
+        [HttpGet("/admin/menus")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public override async Task<ActionResult<List<MainMenuDTO>>> HandleAsync(CancellationToken cancellationToken = default)
         {
-            var mainMenus = (await _menuService.GetAllMenus()).Value;
-            var result = _mapper.Map<List<MainMenuDTO>>(mainMenus);
-            return new OkObjectResult(result);
+            var userName = Request.HttpContext.User.Claims.FirstOrDefault(t => t.Type == ClaimTypes.Name)?.Value;
+            var userResult = await _userService.GetUserByName(userName);
+            var role = await _userService.GetRoleByUserId(userResult.Value.Id);
+            var menu = await _menuService.GetMenusForRole(role.Value.Id);
 
+            return new OkObjectResult(_mapper.Map<List<MainMenuDTO>>(menu.Value));
         }
     }
 }

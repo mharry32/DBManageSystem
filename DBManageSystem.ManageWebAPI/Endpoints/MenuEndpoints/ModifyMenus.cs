@@ -29,7 +29,7 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.MenuEndpoints
             {
                 roleMenus.Add(new RoleMenu(request.RoleId, menuId));
             }
-            return (await _menuService.ModifyMenusForRole(roleMenus)).ToActionResult(this);
+            return (await _menuService.ModifyMenusForRole(request.RoleId,roleMenus)).ToActionResult(this);
         }
     }
 }

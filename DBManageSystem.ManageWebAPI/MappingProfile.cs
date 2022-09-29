@@ -14,6 +14,7 @@ namespace DBManageSystem.ManageWebAPI
             CreateMap<CreateUserRequest, User>();
             CreateMap<User, UserDTO>();
             CreateMap<Role, RoleDTO>();
+            CreateMap<MainMenu, MainMenuDTO>();
             CreateMap<SubMenu, SubMenuDTO>();
         }
     }

@@ -19,6 +19,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using AutoMapper;
 using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DBManageSystem.ManageWebAPI
 {
@@ -151,6 +153,11 @@ namespace DBManageSystem.ManageWebAPI
                     var identityContext = scopedProvider.GetRequiredService<AppIdentityDbContext>();
                     var seedTask =  AppIdentityDbContextSeed.SeedAsync(identityContext, userManager, roleManager,new DefaultPassword(defaultPassword));
                     seedTask.Wait();
+
+                   var _dbManageSysDbContext = scopedProvider.GetRequiredService<DbManageSysDbContext>();
+                    var databaseCreator = _dbManageSysDbContext.GetService<IRelationalDatabaseCreator>();
+                    databaseCreator.CreateTables();
+
                 }
                 catch (Exception ex)
                 {

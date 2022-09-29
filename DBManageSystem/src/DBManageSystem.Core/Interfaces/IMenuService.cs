@@ -10,9 +10,11 @@ using DBManageSystem.Core.Entities.MenuAggregate;
 namespace DBManageSystem.Core.Interfaces;
 public interface IMenuService
 {
-  public Task<Result<List<SubMenu>>> GetMenusForRole(int roleId);
+  public Task<Result<List<int>>> GetsubMenuIdsForRole(int roleId);
 
-  public Task<Result<List<SubMenu>>> GetAllMenus();
+  public Task<Result<List<MainMenu>>> GetAllMenus();
+  
+  public Task<Result<List<MainMenu>>> GetMenusForRole(int roleId);
 
-  public Task<Result> ModifyMenusForRole(List<RoleMenu> roleMenus);
+  public Task<Result> ModifyMenusForRole(int roleId,List<RoleMenu> roleMenus);
 }

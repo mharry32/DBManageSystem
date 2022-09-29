@@ -23,7 +23,7 @@ public class MenuConstants
 
   public const string ACCOUNT_USER_SUB_PATH = "/userManage";
 
-  public const string ACCOUNT_USER_SUB_NAME = "/用户管理";
+  public const string ACCOUNT_USER_SUB_NAME = "用户管理";
 
   public const string ACCOUNT_PERMISSION_SUB_PATH = "/permissionManage";
 

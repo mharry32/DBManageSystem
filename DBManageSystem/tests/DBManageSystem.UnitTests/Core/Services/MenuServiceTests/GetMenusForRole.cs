@@ -19,7 +19,7 @@ public class GetMenusForRole
   private readonly Mock<IRepository<SubMenu>> _mockSubMenuRepo = new();
 
   private readonly Mock<IRepository<RoleMenu>> _mockRoleMenuRepo = new();
-  [Fact]
+/*  [Fact]
   public async Task GetMenusForRoleExpected()
   {
     Role role = new Role();
@@ -46,9 +46,9 @@ public class GetMenusForRole
     Assert.Equal<int>(2, result.Value[1].Id);
     Assert.Equal("m1", result.Value[0].MainMenu.Name);
 
-  }
+  }*/
 
-  [Fact]
+/*  [Fact]
   public async Task GetMenusForRole_SubMenuNotFound()
   {
     Role role = new Role();
@@ -72,5 +72,5 @@ public class GetMenusForRole
     var result = await menuService.GetMenusForRole(role.Id);
     Assert.True(!result.IsSuccess);
     Assert.NotEmpty(result.Errors);
-  }
+  }*/
 }

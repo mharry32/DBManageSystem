@@ -19,43 +19,54 @@ public class MenuService : IMenuService
   private readonly IRepository<SubMenu> _subMenuRepository;
 
   private readonly IRepository<RoleMenu> _roleMenuRepository;
-  public MenuService(IRepository<SubMenu> subMenuRepository, IRepository<RoleMenu> roleMenuRepository)
+
+  private readonly IRepository<MainMenu> _mainMenuRepository;
+  public MenuService(IRepository<SubMenu> subMenuRepository, 
+    IRepository<RoleMenu> roleMenuRepository,
+    IRepository<MainMenu> mainMenuRepository
+    )
   {
     _subMenuRepository = subMenuRepository;
     _roleMenuRepository = roleMenuRepository;
-  }
-  public async Task<Result<List<SubMenu>>> GetAllMenus()
-  {
-
-    return new Result<List<SubMenu>>(await _subMenuRepository.ListAsync(new SubMenusWithMainMenuSpec()));
+    _mainMenuRepository = mainMenuRepository;
   }
 
-  public async Task<Result<List<SubMenu>>> GetMenusForRole(int roleId)
-  {
-    var roleMenuSpec = new RoleMenusByRoleIdSpec(roleId);
-    var roleMenus = await _roleMenuRepository.ListAsync(roleMenuSpec);
-    var subMenus = new List<SubMenu>();
 
-    foreach (var roleMenu in roleMenus)
+  public async Task<Result<List<MainMenu>>> GetMenusForRole(int roleId)
+  {
+    List<SubMenu> subMenus = new List<SubMenu>();
+    Dictionary<int, MainMenu> mainMenusDic = new Dictionary<int, MainMenu>();
+    RoleMenusByRoleIdSpec spec = new RoleMenusByRoleIdSpec(roleId);
+    var roleMenus = await _roleMenuRepository.ListAsync(spec);
+    foreach(var roleMenu in roleMenus)
     {
-      var SubMenuSpec = new SubMenuWithMainMenuByIdSpec(roleMenu.SubMenuId);
-      var subMenu = await _subMenuRepository.FirstOrDefaultAsync(SubMenuSpec);
-      if (subMenu == null)
-      {
-        return Result<List<SubMenu>>.Error($"SubMenuNotFound,MenuId:{roleMenu.SubMenuId}");
-      }
-      subMenus.Add(subMenu);
+      SubMenuWithMainMenuByIdSpec subMenuSpec = new SubMenuWithMainMenuByIdSpec(roleMenu.SubMenuId);
+      var subMenu = await _subMenuRepository.FirstOrDefaultAsync(subMenuSpec);
+      mainMenusDic[subMenu.MainMenu.Id] = subMenu.MainMenu;
     }
 
-    return new Result<List<SubMenu>>(subMenus);
+    return new Result<List<MainMenu>>(mainMenusDic.Values.ToList());
   }
 
-  public async Task<Result> ModifyMenusForRole(List<RoleMenu> roleMenus)
+
+  public async Task<Result<List<int>>> GetsubMenuIdsForRole(int roleId)
+  {
+    List<int> subMenuIds = new List<int>();
+    RoleMenusByRoleIdSpec spec = new RoleMenusByRoleIdSpec(roleId);
+    var roleMenus = await _roleMenuRepository.ListAsync(spec);
+    roleMenus.ForEach(r =>
+    {
+      subMenuIds.Add(r.SubMenuId);
+    });
+    return new Result<List<int>>(subMenuIds);
+  }
+
+  public async Task<Result> ModifyMenusForRole(int roleId,List<RoleMenu> roleMenus)
   {
     try
     {
       Guard.Against.Null(roleMenus);
-      var roleMenuSpec = new RoleMenusByRoleIdSpec(roleMenus[0].RoleId);
+      var roleMenuSpec = new Entities.Specifications.RoleMenusByRoleIdSpec(roleId);
       var roleMenusInStore = await _roleMenuRepository.ListAsync(roleMenuSpec);
       await _roleMenuRepository.DeleteRangeAsync(roleMenusInStore);
       await _roleMenuRepository.AddRangeAsync(roleMenus);
@@ -71,5 +82,19 @@ public class MenuService : IMenuService
     }
 
 
+  }
+
+  public async Task<Result<List<MainMenu>>> GetAllMenus()
+  {
+    List<MainMenu> mainMenus = new List<MainMenu>();
+    MainMenusOrderSpec mainMenuSpec = new MainMenusOrderSpec();
+    var mainMenusInDb = await _mainMenuRepository.ListAsync(mainMenuSpec);
+    foreach(var mainMenu in mainMenusInDb)
+    {
+      SubMenusByMainMenuIdSpec subMenusSpec = new SubMenusByMainMenuIdSpec(mainMenu.Id);
+      var subMenusInDb = await _subMenuRepository.ListAsync(subMenusSpec);
+      mainMenus.Add(mainMenu);
+    }
+    return new Result<List<MainMenu>>(mainMenus);
   }
 }
