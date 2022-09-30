@@ -34,7 +34,6 @@ public class MenuService : IMenuService
 
   public async Task<Result<List<MainMenu>>> GetMenusForRole(int roleId)
   {
-    List<SubMenu> subMenus = new List<SubMenu>();
     Dictionary<int, MainMenu> mainMenusDic = new Dictionary<int, MainMenu>();
     RoleMenusByRoleIdSpec spec = new RoleMenusByRoleIdSpec(roleId);
     var roleMenus = await _roleMenuRepository.ListAsync(spec);
@@ -45,7 +44,8 @@ public class MenuService : IMenuService
       mainMenusDic[subMenu.MainMenu.Id] = subMenu.MainMenu;
     }
 
-    return new Result<List<MainMenu>>(mainMenusDic.Values.ToList());
+
+    return new Result<List<MainMenu>>(mainMenusDic.Values.OrderBy(t=>t.Order).ToList());
   }
 
 

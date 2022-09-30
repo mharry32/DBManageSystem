@@ -2,6 +2,7 @@
 using Ardalis.Result;
 using AutoMapper;
 using DBManageSystem.Core.Interfaces;
+using DBManageSystem.ManageWebAPI.Endpoints.RoleManageEndpoints;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.UserManageEndpoints
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public GetAllUsers(IUserService userService, IMapper mapper)
+        public GetAllUsers(IUserService userService ,IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -37,6 +38,8 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.UserManageEndpoints
             foreach(var user in users.Value)
             {
                 var userdto = _mapper.Map<UserDTO>(user);
+                var role = await _userService.GetRoleByUserId(user.Id);
+                userdto.Role = _mapper.Map<RoleDTO>(role.Value);
                 response.Add(userdto);
             }
 
