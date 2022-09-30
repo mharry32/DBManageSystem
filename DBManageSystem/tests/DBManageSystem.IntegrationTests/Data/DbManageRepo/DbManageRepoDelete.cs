@@ -30,7 +30,7 @@ public class DbManageRepoDelete : IClassFixture<BaseDbManageRepoTestFixture>
   [Fact]
   public async Task DeleteRoleMenu()
   {
-    RoleMenu roleMenu = new RoleMenu(1, 1);
+    RoleMenu roleMenu = new RoleMenu(100, 100);
     await _roleMenuRepo.AddAsync(roleMenu);
     await _roleMenuRepo.DeleteAsync(roleMenu);
 

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Autofac;
+using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Interfaces;
-using DBManageSystem.Core.ProjectAggregate;
 using DBManageSystem.Infrastructure.Data;
 using DBManageSystem.Infrastructure.Logging;
 using DBManageSystem.Infrastructure.Services;
@@ -21,7 +21,7 @@ public class DefaultInfrastructureModule : Module
   {
     _isDevelopment = isDevelopment;
     var coreAssembly =
-      Assembly.GetAssembly(typeof(Project)); // TODO: Replace "Project" with any type from your Core project
+      Assembly.GetAssembly(typeof(RoleMenu));
     var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
     if (coreAssembly != null)
     {

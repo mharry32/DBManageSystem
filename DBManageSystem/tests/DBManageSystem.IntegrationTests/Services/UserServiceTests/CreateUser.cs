@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using Xunit;
 
 namespace DBManageSystem.IntegrationTests.Services.UserServiceTests;
 
-[Collection("CreateUser")]
 public class CreateUser:IClassFixture<BaseIdentityTestFixture>
 {
   public BaseIdentityTestFixture Fixture { get; }
@@ -22,10 +22,15 @@ public class CreateUser:IClassFixture<BaseIdentityTestFixture>
   public async Task CreateOneUser()
   {
     User user = new User();
-    user.UserName = "testerUser";
+    user.UserName = "CreateOneUser";
     UserService userService = new UserService(Fixture.userManager, null, null, null, Fixture.defaultPassword, null);
    var result = await userService.CreateUser(user);
-    Assert.True(result.IsSuccess);
+    if (result.Errors?.FirstOrDefault() != null) 
+    {
+      Assert.Fail(result.Errors?.FirstOrDefault());
+    }
+
+   Assert.True(result.IsSuccess);
     var userInDb = Fixture.identityContext.Users.FirstOrDefault(t=>t.UserName == user.UserName);
     Assert.NotNull(userInDb);
     Assert.Equal(user.UserName, userInDb.UserName);

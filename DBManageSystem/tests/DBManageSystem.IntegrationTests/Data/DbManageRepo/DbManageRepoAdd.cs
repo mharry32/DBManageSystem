@@ -31,15 +31,15 @@ public class DbManageRepoAdd:IClassFixture<BaseDbManageRepoTestFixture>
   public async Task MenuAdd()
   {
     MainMenu mainMenu = new MainMenu("m1", 1);
-    mainMenu.Id = 1;
+    mainMenu.Id = 100;
     SubMenu subMenu = new SubMenu("/m1/s1", mainMenu, "s1", 1);
-    subMenu.Id = 1;
+    subMenu.Id = 100;
     mainMenu.AddSubMenu(subMenu);
 
    await _mainMenuRepo.AddAsync(mainMenu);
 
-    var mainMenuInDB = (await _mainMenuRepo.ListAsync()).FirstOrDefault();
-    Assert.Equal("m1", mainMenuInDB.Name);
+    var mainMenuInDB = (await _mainMenuRepo.ListAsync()).FirstOrDefault(t=>t.Name == mainMenu.Name);
+    Assert.NotNull(mainMenuInDB);
 
     SubMenuWithMainMenuByIdSpec spec = new SubMenuWithMainMenuByIdSpec(subMenu.Id);
     var subMenuInDB = (await _subMenuRepo.ListAsync(spec)).FirstOrDefault();

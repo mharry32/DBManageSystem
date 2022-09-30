@@ -9,15 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.SharedKernel", "DBManageSystem\src\DBManageSystem.SharedKernel\DBManageSystem.SharedKernel.csproj", "{E0D1AB78-9F53-461C-8744-B1B5A0859B2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.Web", "DBManageSystem\src\DBManageSystem.Web\DBManageSystem.Web.csproj", "{5241FFD4-9953-482D-926A-4E7DC9129AEC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.FunctionalTests", "DBManageSystem\tests\DBManageSystem.FunctionalTests\DBManageSystem.FunctionalTests.csproj", "{D43EB318-39B0-46BA-B244-D662288791CB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.IntegrationTests", "DBManageSystem\tests\DBManageSystem.IntegrationTests\DBManageSystem.IntegrationTests.csproj", "{B59288AC-29F2-40E7-9B1E-B7A3D5A96E69}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.UnitTests", "DBManageSystem\tests\DBManageSystem.UnitTests\DBManageSystem.UnitTests.csproj", "{BD720E1A-9E5B-4985-93BD-D78644F1B968}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBManageSystem.ManageWebAPI", "DBManageSystem.ManageWebAPI\DBManageSystem.ManageWebAPI.csproj", "{2809259E-25B0-47D7-B1DA-E7B8D4ECCD80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.ManageWebAPI", "DBManageSystem.ManageWebAPI\DBManageSystem.ManageWebAPI.csproj", "{2809259E-25B0-47D7-B1DA-E7B8D4ECCD80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +35,6 @@ Global
 		{E0D1AB78-9F53-461C-8744-B1B5A0859B2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0D1AB78-9F53-461C-8744-B1B5A0859B2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0D1AB78-9F53-461C-8744-B1B5A0859B2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5241FFD4-9953-482D-926A-4E7DC9129AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5241FFD4-9953-482D-926A-4E7DC9129AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5241FFD4-9953-482D-926A-4E7DC9129AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5241FFD4-9953-482D-926A-4E7DC9129AEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D43EB318-39B0-46BA-B244-D662288791CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D43EB318-39B0-46BA-B244-D662288791CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D43EB318-39B0-46BA-B244-D662288791CB}.Release|Any CPU.ActiveCfg = Release|Any CPU

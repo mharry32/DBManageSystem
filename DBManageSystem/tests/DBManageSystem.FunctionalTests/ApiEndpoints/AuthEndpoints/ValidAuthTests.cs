@@ -8,7 +8,6 @@ using Ardalis.HttpClientTestExtensions;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.ManageWebAPI;
 using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
-using DBManageSystem.Web;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

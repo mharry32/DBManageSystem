@@ -13,7 +13,6 @@ using DBManageSystem.Infrastructure.Configs;
 using DBManageSystem.Infrastructure.Data;
 using DBManageSystem.Infrastructure.Identity;
 using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
-using DBManageSystem.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -51,7 +50,7 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
       _identityDbContext = scopedServices.GetRequiredService<AppIdentityDbContext>();
       _dbManageSysDbContext = scopedServices.GetRequiredService<DbManageSysDbContext>();
       var logger = scopedServices
-          .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
+          .GetRequiredService<ILogger<FunctionalTestWebApplicationFactory<TStartup>>>();
 
       var userManager = scopedServices.GetRequiredService<UserManager<User>>();
       var roleManager = scopedServices.GetRequiredService<RoleManager<Role>>();

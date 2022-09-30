@@ -112,22 +112,11 @@ public class MenuOpFunctionTests : IClassFixture<FunctionalTestWebApplicationFac
     data = await _client.TestWithAuthorizeUsingJWT<object>(null, $"/users/menusbyrole/{DbManageSysDBSeed.testRoleId}", HttpMethod.Get, token);
 
     json = await data.Content.ReadAsStringAsync();
-    var menusAfterModified = JsonSerializer.Deserialize<List<MainMenuDTO>>(json, Constants.DefaultJsonOptions);
+    var menusAfterModified = JsonSerializer.Deserialize<List<int>>(json, Constants.DefaultJsonOptions);
 
     //check main menus
-    Assert.Contains(menusAfterModified, t => t.Name == DbManageSysDBSeed.testMainMenu);
-    Assert.Contains(menusAfterModified, t => t.Name == DbManageSysDBSeed.testModifyMainMenu);
-
-    var subMenusAfterModified = new List<SubMenuDTO>();
-
-    foreach(var menu in menusAfterModified)
-    {
-      subMenusAfterModified.AddRange(menu.SubMenus);
-    }
-
-    //check sub menus
-    Assert.Contains(subMenusAfterModified, t => t.Name == DbManageSysDBSeed.testSubMenu);
-    Assert.Contains(subMenusAfterModified, t => t.Name == DbManageSysDBSeed.testModifySubMenu);
+    Assert.Contains(menusAfterModified, t =>t== request.MenuIds[0]);
+    Assert.Contains(menusAfterModified, t => t == request.MenuIds[1]);
 
   }
 
