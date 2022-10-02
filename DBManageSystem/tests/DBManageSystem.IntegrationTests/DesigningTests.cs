@@ -27,9 +27,12 @@ public class DesigningTests
     DbContext db = new DbContext(builder.Options);
     var con =  db.Database.GetDbConnection();
     con.Open();
-    var dt = con.GetSchema("Databases");
+    var shemas = con.GetSchema();
     
-
+    //var dt = con.GetSchema("Databases");
+    string[] restricts = new string[4];
+    restricts[1] = "dbtest";
+    var dt = con.GetSchema("Tables", restricts);
 
 
 
@@ -45,14 +48,15 @@ public class DesigningTests
     stringbuilder.Add("Data Source", "14.29.249.230");
     stringbuilder.Add("User Id", "sa");
     stringbuilder.Add("Password", "!tpr0gram");
+    //stringbuilder.Add("Initial Catalog", "abptest");
     Debug.WriteLine(stringbuilder.ConnectionString);
     builder.UseSqlServer(stringbuilder.ConnectionString);
     DbContext db = new DbContext(builder.Options);
     var con = db.Database.GetDbConnection();
     con.Open();
-
+    var shemas = con.GetSchema();
     //var dt = con.GetSchema("Databases");
-    var dt = con.GetSchema("Databases");
+    var dt = con.GetSchema("Columns");
 /*    con.Close();
     stringbuilder.Add("Initial Catalog", "MHXinZHIHU");
     db.Database.SetConnectionString(stringbuilder.ConnectionString);
