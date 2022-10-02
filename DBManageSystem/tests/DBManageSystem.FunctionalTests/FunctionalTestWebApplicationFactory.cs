@@ -62,7 +62,6 @@ public class FunctionalTestWebApplicationFactory<TStartup> :WebApplicationFactor
       databaseCreator.CreateTables();
 
 
-
       try
       {
         // Can also skip creating the items
