@@ -10,6 +10,10 @@ using DBManageSystem.SharedKernel;
 namespace DBManageSystem.Core.Entities;
 public class DatabaseServer:EntityBase
 {
+  public DatabaseServer()
+  {
+
+  }
   public string Name { get; set; }
   public string ConnectUrl { get; set; }
 
@@ -17,7 +21,18 @@ public class DatabaseServer:EntityBase
 
   public string? Password { get; set; }
 
-  public DateTime? LastUpdatedTime { get; set; }
+  public DateTime? LastUpdatedTime { get;private set; }
 
-  public DatabaseStatusEnum Status { get; set; }
+  public DatabaseStatusEnum Status { get;private set; }
+
+  public DatabaseTypeEnum DatabaseType { get; set; }
+
+  public bool IsMonitored { get; set; }
+
+  public void UpdateStatus(DatabaseStatusEnum status)
+  {
+    this.Status = status;
+    this.LastUpdatedTime = DateTime.Now;
+  }
+
 }
