@@ -27,13 +27,12 @@ public class DesigningTests
     DbContext db = new DbContext(builder.Options);
     var con =  db.Database.GetDbConnection();
     con.Open();
-    var shemas = con.GetSchema();
-    
     //var dt = con.GetSchema("Databases");
     string[] restricts = new string[4];
     restricts[1] = "dbtest";
-    var dt = con.GetSchema("Tables", restricts);
-
+    restricts[2] = "mainmenus";
+    //var dt = con.GetSchema("Tables", restricts);
+    var dt = con.GetSchema("Columns", restricts);
 
 
     Assert.NotNull(dt);
@@ -55,8 +54,10 @@ public class DesigningTests
     var con = db.Database.GetDbConnection();
     con.Open();
     var shemas = con.GetSchema();
+    var restricts = new string[4];
+    restricts[1] = "";
     //var dt = con.GetSchema("Databases");
-    var dt = con.GetSchema("Columns");
+    var dt = con.GetSchema("Columns",new string[] {});
 /*    con.Close();
     stringbuilder.Add("Initial Catalog", "MHXinZHIHU");
     db.Database.SetConnectionString(stringbuilder.ConnectionString);
