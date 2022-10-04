@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using System.Text.Json;
 
 namespace DBManageSystem.IntegrationTests;
 public class DesigningTests
@@ -20,6 +21,7 @@ public class DesigningTests
     DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
     DbConnectionStringBuilder stringbuilder = new DbConnectionStringBuilder();
     stringbuilder.Add("Server", "localhost");
+    stringbuilder.Add("Database", "dbtest");
     stringbuilder.Add("Uid", "root");
     stringbuilder.Add("Pwd", "1995072132Mh.");
     stringbuilder.Add("charset", "UTF8");
@@ -35,6 +37,23 @@ public class DesigningTests
     var dt = con.GetSchema("Columns", restricts);
 
 
+    var cmd = con.CreateCommand();
+    cmd.CommandText = "select * from newtable";
+    var reader =  cmd.ExecuteReader();
+    var datacls = reader.GetColumnSchema();
+
+    while (reader.Read())
+    {
+      string result = "";
+      foreach(var cl in datacls)
+      {
+        result = result + cl.ColumnName + ":" + reader[cl.ColumnName] + " ";
+      }
+      Debug.WriteLine(result);
+    }
+
+
+    //还需测试update delete的效果
     Assert.NotNull(dt);
   }
 
