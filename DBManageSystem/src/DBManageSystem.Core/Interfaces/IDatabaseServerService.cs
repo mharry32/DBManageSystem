@@ -21,6 +21,8 @@ public interface IDatabaseServerService
 
   Task<Result<List<DatabaseServer>>> GetServerList();
 
+  Task<Result> CreateDatabaseServer(DatabaseServer databaseServer);
+
   Task<Result> UpdateDatabaseServer(DatabaseServer databaseServer);
 
   Task<Result> DeleteDatabaseServer(int dbServerId);
