@@ -16,6 +16,41 @@ public class DesigningTests
   private const string ConnectionString = @"Server=localhost;Uid=root;Pwd=1995072132Mh.;charset=UTF8";
 
   [Fact]
+  public void TestUpdate()
+  {
+    DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+    DbConnectionStringBuilder stringbuilder = new DbConnectionStringBuilder();
+    stringbuilder.Add("Server", "localhost");
+    stringbuilder.Add("Database", "dbtest");
+    stringbuilder.Add("Uid", "root");
+    stringbuilder.Add("Pwd", "1995072132Mh.");
+    stringbuilder.Add("charset", "UTF8");
+    builder.UseMySql(stringbuilder.ConnectionString, MySqlServerVersion.LatestSupportedServerVersion);
+    DbContext db = new DbContext(builder.Options);
+    var con = db.Database.GetDbConnection();
+    con.Open();
+    var cmd = con.CreateCommand();
+    cmd.CommandText = "update newtable sett updatetime = '2022-10-06' where id =1";
+    var reader = cmd.ExecuteReader();
+    var datacls = reader.GetColumnSchema();
+    var rows = reader.RecordsAffected;
+    while (reader.Read())
+    {
+      string result = "";
+      foreach (var cl in datacls)
+      {
+        result = result + cl.ColumnName + ":" + reader[cl.ColumnName] + " ";
+      }
+      Debug.WriteLine(result);
+    }
+
+
+    //还需测试update delete的效果
+    Assert.Fail("");
+  }
+
+
+  [Fact]
   public async Task GetConnect()
   {
     DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
@@ -76,14 +111,35 @@ public class DesigningTests
     var restricts = new string[4];
     restricts[1] = "";
     //var dt = con.GetSchema("Databases");
-    var dt = con.GetSchema("Columns",new string[] {});
-/*    con.Close();
-    stringbuilder.Add("Initial Catalog", "MHXinZHIHU");
-    db.Database.SetConnectionString(stringbuilder.ConnectionString);
-    con = db.Database.GetDbConnection();
-    con.Open();*/
+    //var dt = con.GetSchema("Columns",new string[] {});
+    /*    con.Close();
+        stringbuilder.Add("Initial Catalog", "MHXinZHIHU");
+        db.Database.SetConnectionString(stringbuilder.ConnectionString);
+        con = db.Database.GetDbConnection();
+        con.Open();*/
 
     //dt = con.GetSchema("Tables");
-    Assert.NotNull(dt);
+
+    stringbuilder.Add("Initial Catalog", "MHXinZHIHU");
+    con.Close();
+    db.Database.SetConnectionString(stringbuilder.ConnectionString);
+    con = db.Database.GetDbConnection();
+    con.Open();
+    var cmd = con.CreateCommand();
+    //cmd.CommandText = "update Questions set QuestionType=0 where QuestionID=19628851";
+    cmd.CommandText = "select questionid,isanswer from questions";
+    var reader = cmd.ExecuteReader();
+    var datacls = reader.GetColumnSchema();
+    var rows = reader.RecordsAffected;
+    while (reader.Read())
+    {
+      string result = "";
+      foreach (var cl in datacls)
+      {
+        result = result + cl.ColumnName + ":" + reader[cl.ColumnName] + " ";
+      }
+      Debug.WriteLine(result);
+    }
+    Assert.NotNull(reader);
   }
 }

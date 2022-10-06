@@ -31,6 +31,6 @@ public interface IDatabaseServerService
 
   Task<Result<List<ColumnSchema>>> GetColumnSchemas(int dbServerId, string TableName);
 
-  Task<Result<List<object>>> ExecuteSql(DatabaseServer server, string sqlText);
+  Task<SqlExecuteResult> ExecuteSql(DatabaseServer server, string sqlText);
 
 }
