@@ -21,6 +21,7 @@ using AutoMapper;
 using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace DBManageSystem.ManageWebAPI
 {
@@ -31,7 +32,9 @@ namespace DBManageSystem.ManageWebAPI
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             builder.Logging.AddConsole();
-
+            builder.Services.AddDataProtection().SetDefaultKeyLifetime(TimeSpan.FromDays(365 * 100))
+      .SetApplicationName(ApplicationConstants.APP_NAME)
+      .PersistKeysToFileSystem(new DirectoryInfo(AppContext.BaseDirectory));
             builder.Services.AddDbContext<DbManageSysDbContext>(op =>
             {
                 op.UseMySql(builder.Configuration["DbManageSysDbConnectString"], MySqlServerVersion.LatestSupportedServerVersion);

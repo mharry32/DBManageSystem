@@ -25,7 +25,7 @@ public class CryptoServiceTestFixture
     serviceCollection.AddLogging(t=>t.AddConsole());
     serviceCollection.AddDataProtection().SetDefaultKeyLifetime(TimeSpan.FromDays(365 * 100))
       .SetApplicationName(ApplicationConstants.APP_NAME)
-      .PersistKeysToFileSystem(new DirectoryInfo(AppContext.BaseDirectory)); ;
+      .PersistKeysToFileSystem(new DirectoryInfo(AppContext.BaseDirectory));
 
 
     var containerBuilder = new ContainerBuilder();
