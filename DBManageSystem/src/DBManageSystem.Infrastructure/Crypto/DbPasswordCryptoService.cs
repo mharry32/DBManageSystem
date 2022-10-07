@@ -18,11 +18,34 @@ public class DbPasswordCryptoService : IDbPasswordCryptoService
   }
   public Task<Result<string>> Decrypt(string encryptedPassword)
   {
-    throw new NotImplementedException();
+    return Task.Run(() =>
+    {
+      try
+      {
+        string unProtectedPayload = _protector.Unprotect(encryptedPassword);
+        return new Result<string>(unProtectedPayload);
+      }
+      catch (Exception ex)
+      {
+        return Result<string>.Error(ex.Message);
+      }
+    });
+
   }
 
-  public async Task<Result<string>> Encrypt(string dbPassword)
+  public Task<Result<string>> Encrypt(string dbPassword)
   {
-    string protectedPayload = _protector.Protect(dbPassword);
+    return Task.Run(() =>
+    {
+      try
+      {
+        string protectedPayload = _protector.Protect(dbPassword);
+        return new Result<string>(protectedPayload);
+      }
+      catch (Exception ex)
+      {
+        return Result<string>.Error(ex.Message);
+      }
+    });
   }
 }

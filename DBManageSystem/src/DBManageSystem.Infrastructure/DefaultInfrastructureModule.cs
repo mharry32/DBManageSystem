@@ -2,6 +2,7 @@
 using Autofac;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Interfaces;
+using DBManageSystem.Infrastructure.Crypto;
 using DBManageSystem.Infrastructure.Data;
 using DBManageSystem.Infrastructure.Logging;
 using DBManageSystem.Infrastructure.Services;
@@ -64,7 +65,7 @@ public class DefaultInfrastructureModule : Module
 
     builder.RegisterType<RoleService>().As<IRoleService>().InstancePerLifetimeScope();
     builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
-
+    builder.RegisterType<DbPasswordCryptoService>().As<IDbPasswordCryptoService>().InstancePerLifetimeScope();
     builder
       .RegisterType<Mediator>()
       .As<IMediator>()
