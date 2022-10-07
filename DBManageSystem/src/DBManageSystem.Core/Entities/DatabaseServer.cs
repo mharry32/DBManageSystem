@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using DBManageSystem.Core.Enums;
 using DBManageSystem.SharedKernel;
-
+using DBManageSystem.SharedKernel.Interfaces;
 
 namespace DBManageSystem.Core.Entities;
-public class DatabaseServer:EntityBase
+public class DatabaseServer:EntityBase,IAggregateRoot
 {
   public DatabaseServer()
   {

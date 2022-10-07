@@ -10,6 +10,8 @@ using DBManageSystem.Core.Constants;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Entities.MenuAggregate;
 using Microsoft.EntityFrameworkCore;
+using Ardalis.SmartEnum.EFCore;
+using SmartEnum.EFCore;
 
 namespace DBManageSystem.Infrastructure.Data;
 public class DbManageSysDbContext : DbContext
@@ -19,10 +21,13 @@ public class DbManageSysDbContext : DbContext
   public DbSet<SubMenu> subMenus { get; set; }
 
   public DbSet<RoleMenu> roleMenus { get; set; }
+
+  public DbSet<DatabaseServer> databaseServers { get; set; }
   public DbManageSysDbContext(DbContextOptions<DbManageSysDbContext> options) : base(options)
   {
 
   }
+
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -82,6 +87,6 @@ public class DbManageSysDbContext : DbContext
       Order = accountManageMenus.Item1.Order
     });
 
-
+    modelBuilder.ConfigureSmartEnum();
   }
 }
