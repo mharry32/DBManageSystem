@@ -97,6 +97,8 @@ public class BaseDbServerOpsService : IDatabaseOperationsService
       if(hasData == true)
       {
         JsonArray jsonArray = new JsonArray();
+
+        JsonArray jsonHeader = new JsonArray();
         while (reader.Read())
         {
           JsonObject jsonobj = new JsonObject();
@@ -108,7 +110,11 @@ public class BaseDbServerOpsService : IDatabaseOperationsService
          jsonArray.Add(jsonobj);
         }
         
-        return SqlExecuteResult.SuccessWithDatas(jsonArray.ToJsonString());
+        foreach(var column in columns)
+        {
+          jsonHeader.Add(JsonValue.Create<string>(column.ColumnName));
+        }
+        return SqlExecuteResult.SuccessWithDatas(jsonArray.ToJsonString(), jsonHeader.ToJsonString());
       }
       else
       {

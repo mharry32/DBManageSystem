@@ -49,7 +49,8 @@ public class DbOpsTests:IClassFixture<DbOpServicesTestFixture>
       dbcontext.Database.EnsureCreated();
 
 
-      var result = await service.ExecuteSql(mysql, "TestMySqlExecuteSql", "select nulldate from testEntities");
+      var result = await service.ExecuteSql(mysql, "TestMySqlExecuteSql", "select * from testEntities");
+
 
       Assert.NotNull(result);
     }

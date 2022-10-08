@@ -15,16 +15,19 @@ public class SqlExecuteResult
 
   public string JsonData { get; private set; }
 
+  public string JsonHeader { get; private set; }
+
   public int RowsEffected { get; private set; }
 
   protected SqlExecuteResult() { }
 
-  public static SqlExecuteResult SuccessWithDatas(string jsonData)
+  public static SqlExecuteResult SuccessWithDatas(string jsonData,string jsonHeader)
   {
     SqlExecuteResult result = new SqlExecuteResult();
     result.IsSuccess = true;
     result.HasData = true;
     result.JsonData = jsonData;
+    result.JsonHeader = jsonHeader;
     return result;
   }
 
