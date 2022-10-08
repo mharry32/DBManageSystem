@@ -19,21 +19,26 @@ public class DesigningTests
   public void TestUpdate()
   {
     DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-    DbConnectionStringBuilder stringbuilder = new DbConnectionStringBuilder();
-    stringbuilder.Add("Server", "localhost");
-    stringbuilder.Add("Database", "dbtest");
-    stringbuilder.Add("Uid", "root");
-    stringbuilder.Add("Pwd", "1995072132Mh.");
-    stringbuilder.Add("charset", "UTF8");
+    DbConnectionStringBuilder stringbuilder = new DbConnectionStringBuilder
+    {
+      { "Server", "localhost" },
+      { "Database", "dbtest" },
+      { "Uid", "root" },
+      { "Pwd", "1995072132Mh." },
+      { "charset", "UTF8" }
+    };
     builder.UseMySql(stringbuilder.ConnectionString, MySqlServerVersion.LatestSupportedServerVersion);
     DbContext db = new DbContext(builder.Options);
     var con = db.Database.GetDbConnection();
     con.Open();
     var cmd = con.CreateCommand();
-    cmd.CommandText = "update newtable sett updatetime = '2022-10-06' where id =1";
+    //cmd.CommandText = "update newtable set updatetime = '2022-10-06' where id =1";
+    cmd.CommandText = "select * from newtable";
+
     var reader = cmd.ExecuteReader();
     var datacls = reader.GetColumnSchema();
     var rows = reader.RecordsAffected;
+    var hasrow = reader.HasRows;
     while (reader.Read())
     {
       string result = "";

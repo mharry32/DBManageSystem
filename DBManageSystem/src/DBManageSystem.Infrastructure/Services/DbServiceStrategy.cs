@@ -5,12 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using DBManageSystem.Core.Enums;
 using DBManageSystem.Core.Interfaces;
+using DBManageSystem.Infrastructure.Services.DbManageServices;
 
 namespace DBManageSystem.Infrastructure.Services;
 public class DbServiceStrategy : IDbServiceStrategy
 {
-  public IDatabaseServerService Decide(DatabaseTypeEnum databaseType)
+  public IDatabaseOperationsService Decide(DatabaseTypeEnum databaseType)
   {
-    throw new NotImplementedException();
+    if(databaseType==DatabaseTypeEnum.MySQL)
+    {
+      return new MySQLOperationService();
+    }
+    else
+    {
+      throw new NotSupportedException();
+    }
   }
 }

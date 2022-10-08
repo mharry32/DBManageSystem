@@ -62,7 +62,7 @@ public class DefaultInfrastructureModule : Module
       .InstancePerLifetimeScope();
 
     builder.RegisterGeneric(typeof(LoggerAdapter<>)).As(typeof(IAppLogger<>)).InstancePerLifetimeScope();
-
+    builder.RegisterType<DbServiceStrategy>().As<IDbServiceStrategy>().InstancePerLifetimeScope();
     builder.RegisterType<RoleService>().As<IRoleService>().InstancePerLifetimeScope();
     builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
     builder.RegisterType<DbPasswordCryptoService>().As<IDbPasswordCryptoService>().InstancePerLifetimeScope();

@@ -12,12 +12,7 @@ using DBManageSystem.SharedKernel.Interfaces;
 namespace DBManageSystem.Core.Interfaces;
 public interface IDatabaseServerService
 {
-  /// <summary>
-  /// Get the Newest Status of DatabaseServer
-  /// </summary>
-  /// <param name="server">The Server needs to check status</param>
-  /// <returns>The Status</returns>
-  Task<Result<DatabaseStatusEnum>> CheckStatus(DatabaseServer server);
+
 
   Task<Result<List<DatabaseServer>>> GetServerList();
 
@@ -27,12 +22,6 @@ public interface IDatabaseServerService
 
   Task<Result> DeleteDatabaseServer(int dbServerId);
 
-  Task<Result<List<DatabaseSchema>>> GetDatabaseSchemas(int dbServerId);
-
-  Task<Result<List<TableSchema>>> GetTableSchemas(int dbServerId, string databaseName);
-
-  Task<Result<List<ColumnSchema>>> GetColumnSchemas(int dbServerId, string TableName);
-
-  Task<SqlExecuteResult> ExecuteSql(DatabaseServer server, string databaseName, string sqlText);
+  Task<Result<DatabaseServer>> GetDatabaseServerWithPasswordDecrptedById(int dbServerId);
 
 }
