@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Ardalis.HttpClientTestExtensions;
+using JetBrains.Annotations;
 
 namespace DBManageSystem.IntegrationTests.DbOpServices;
 
@@ -195,13 +196,30 @@ public class DbOpsTests:IClassFixture<DbOpServicesTestFixture>
     }
   }
 
-    [Fact]
-    public async Task TestMySqlCheckStatusOffline()
+
+  [Fact]
+  public async Task TestSqlServerCheckStatusOnline()
+  {
+    using (var scope = _serviceProvider.CreateScope())
     {
-      using (var scope = _serviceProvider.CreateScope())
-      {
-        var strategy = scope.ServiceProvider.GetRequiredService<IDbServiceStrategy>();
-        var service = strategy.Decide(_fixture.mysql.DatabaseType);
+      var strategy = scope.ServiceProvider.GetRequiredService<IDbServiceStrategy>();
+      var service = strategy.Decide(_fixture.sqlserver.DatabaseType);
+
+      var result = await service.CheckStatus(_fixture.sqlserver);
+      Assert.True(result.IsSuccess);
+
+      Assert.Equal(DatabaseStatusEnum.Online, result.Value);
+
+    }
+  }
+
+  [Fact]
+  public async Task TestMySqlCheckStatusOffline()
+  {
+    using (var scope = _serviceProvider.CreateScope())
+    {
+      var strategy = scope.ServiceProvider.GetRequiredService<IDbServiceStrategy>();
+      var service = strategy.Decide(_fixture.mysql.DatabaseType);
 
       DatabaseServer errorServer = new DatabaseServer()
       {
@@ -210,10 +228,10 @@ public class DbOpsTests:IClassFixture<DbOpServicesTestFixture>
         Password = "xx",
         DatabaseType = DatabaseTypeEnum.MySQL
       };
-        var result = await service.CheckStatus(errorServer);
-       
+      var result = await service.CheckStatus(errorServer);
 
-        Assert.Equal(DatabaseStatusEnum.Offline, result.Value);
+
+      Assert.Equal(DatabaseStatusEnum.Offline, result.Value);
 
       DatabaseServer errorAuth = new DatabaseServer()
       {
@@ -221,6 +239,42 @@ public class DbOpsTests:IClassFixture<DbOpServicesTestFixture>
         UserName = "xx",
         Password = "xx",
         DatabaseType = DatabaseTypeEnum.MySQL
+
+      };
+
+      result = await service.CheckStatus(errorAuth);
+      Assert.Equal(DatabaseStatusEnum.Offline, result.Value);
+
+    }
+
+  }
+
+  [Fact]
+  public async Task TestSqlServerCheckStatusOffline()
+  {
+    using (var scope = _serviceProvider.CreateScope())
+    {
+      var strategy = scope.ServiceProvider.GetRequiredService<IDbServiceStrategy>();
+      var service = strategy.Decide(_fixture.sqlserver.DatabaseType);
+
+      DatabaseServer errorServer = new DatabaseServer()
+      {
+        ConnectUrl = "xx",
+        UserName = "xx",
+        Password = "xx",
+        DatabaseType = DatabaseTypeEnum.SQLServer
+      };
+      var result = await service.CheckStatus(errorServer);
+
+
+      Assert.Equal(DatabaseStatusEnum.Offline, result.Value);
+
+      DatabaseServer errorAuth = new DatabaseServer()
+      {
+        ConnectUrl = _fixture.DbUrl,
+        UserName = "xx",
+        Password = "xx",
+        DatabaseType = DatabaseTypeEnum.SQLServer
 
       };
 
