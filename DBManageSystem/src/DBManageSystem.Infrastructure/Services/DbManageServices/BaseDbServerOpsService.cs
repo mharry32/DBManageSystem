@@ -16,6 +16,8 @@ using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Data;
+using System.Net.WebSockets;
 
 namespace DBManageSystem.Infrastructure.Services.DbManageServices;
 public class BaseDbServerOpsService : IDatabaseOperationsService
@@ -31,25 +33,25 @@ public class BaseDbServerOpsService : IDatabaseOperationsService
      throw new NotImplementedException(); 
   }
 
+  public virtual DatabaseSchema ParseDatabaseSchema(string key,string value)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<Result<DatabaseStatusEnum>> CheckStatus(DatabaseServer server)
   {
     try
     {
 
       DbContext db = GetDbContext(server);
-      var result = await db.Database.CanConnectAsync();
-      if(result == true)
-      {
-        return new Result<DatabaseStatusEnum>(DatabaseStatusEnum.Online);
-      }
-      else
-      {
-        return new Result<DatabaseStatusEnum>(DatabaseStatusEnum.Offline);
-      }
+      await db.Database.OpenConnectionAsync();
+      await db.Database.CloseConnectionAsync();
+      return new Result<DatabaseStatusEnum>(DatabaseStatusEnum.Online);
+
     }
     catch(Exception ex)
     {
-      return Result<DatabaseStatusEnum>.Error(ex.Message);
+      return new Result<DatabaseStatusEnum>(DatabaseStatusEnum.Offline);
     }
   }
 
@@ -128,20 +130,96 @@ public class BaseDbServerOpsService : IDatabaseOperationsService
     }
   }
 
-  public Task<Result<List<ColumnSchema>>> GetColumnSchemas(int dbServerId, string TableName)
+  public async Task<Result<List<ColumnSchema>>> GetColumnSchemas(DatabaseServer server, string TableName, string databaseName)
+  {
+    try
+    {
+      DbContext db = GetDbContext(server, databaseName);
+      DbConnection dbConnection = db.Database.GetDbConnection();
+      dbConnection.Open();
+      var columnsDataTable = await dbConnection.GetSchemaAsync("Columns");
+      var schemas = new List<ColumnSchema>();
+      foreach (DataRow row in columnsDataTable.Rows)
+      {
+        var column = ParseColumnSchema(row, TableName ,databaseName);
+        if (column != null)
+        {
+          schemas.Add(column);
+        }
+      }
+
+      return Result.Success<List<ColumnSchema>>(schemas);
+    }
+    catch (Exception ex)
+    {
+      return Result.Error(ex.Message);
+    }
+  }
+
+  public virtual ColumnSchema ParseColumnSchema(DataRow row, string tableName, string databaseName)
   {
     throw new NotImplementedException();
   }
 
-  public Task<Result<List<DatabaseSchema>>> GetDatabaseSchemas(int dbServerId)
+  public async Task<Result<List<DatabaseSchema>>> GetDatabaseSchemas(DatabaseServer server)
+  {
+    try
+    {
+      DbContext db = GetDbContext(server);
+      DbConnection dbConnection = db.Database.GetDbConnection();
+      dbConnection.Open();
+      var databaseTable = await dbConnection.GetSchemaAsync("Databases");
+
+      var schemas = new List<DatabaseSchema>();
+      foreach(DataRow row in databaseTable.Rows) 
+      {
+        foreach(DataColumn column in databaseTable.Columns)
+        {
+          var schema = ParseDatabaseSchema(column.ColumnName, row[column]?.ToString());
+          if(schema != null)
+          {
+            schemas.Add(schema);
+          }
+        }
+      }
+
+      return Result.Success<List<DatabaseSchema>>(schemas);
+    }
+    catch (Exception ex)
+    {
+      return Result.Error(ex.Message);
+    }
+  }
+
+  public virtual TableSchema ParseTableSchema(DataRow data,string databaseName)
   {
     throw new NotImplementedException();
   }
 
-
-  public Task<Result<List<TableSchema>>> GetTableSchemas(int dbServerId, string databaseName)
+  public async Task<Result<List<TableSchema>>> GetTableSchemas(DatabaseServer server, string databaseName)
   {
-    throw new NotImplementedException();
+    try
+    {
+      DbContext db = GetDbContext(server,databaseName);
+      DbConnection dbConnection = db.Database.GetDbConnection();
+      dbConnection.Open();
+      var tablesDataTable = await dbConnection.GetSchemaAsync("Tables");
+      var schemas = new List<TableSchema>();
+      foreach (DataRow row in tablesDataTable.Rows)
+      {
+        var table = ParseTableSchema(row, databaseName);
+        if(table != null)
+        {
+          schemas.Add(table);
+        }
+      }
+
+      return Result.Success<List<TableSchema>>(schemas);
+    }
+    catch (Exception ex)
+    {
+      return Result.Error(ex.Message);
+    }
   }
 
 }

@@ -16,6 +16,10 @@ public class DbServiceStrategy : IDbServiceStrategy
     {
       return new MySQLOperationService();
     }
+    else if(databaseType == DatabaseTypeEnum.SQLServer)
+    {
+      return new SQLServerOperationService();
+    }
     else
     {
       throw new NotSupportedException();

@@ -18,11 +18,11 @@ public interface IDatabaseOperationsService
   /// <returns>The Status</returns>
   Task<Result<DatabaseStatusEnum>> CheckStatus(DatabaseServer server);
 
-  Task<Result<List<DatabaseSchema>>> GetDatabaseSchemas(int dbServerId);
+  Task<Result<List<DatabaseSchema>>> GetDatabaseSchemas(DatabaseServer server);
 
-  Task<Result<List<TableSchema>>> GetTableSchemas(int dbServerId, string databaseName);
+  Task<Result<List<TableSchema>>> GetTableSchemas(DatabaseServer server, string databaseName);
 
-  Task<Result<List<ColumnSchema>>> GetColumnSchemas(int dbServerId, string TableName);
+  Task<Result<List<ColumnSchema>>> GetColumnSchemas(DatabaseServer server, string TableName,string databaseName);
 
   Task<SqlExecuteResult> ExecuteSql(DatabaseServer server, string databaseName, string sqlText);
 }
