@@ -32,7 +32,7 @@ namespace DBManageSystem.ManageWebAPI
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             builder.Logging.AddConsole();
-            builder.Services.AddDataProtection().SetDefaultKeyLifetime(TimeSpan.FromDays(365 * 100))
+            builder.Services.AddDataProtection().DisableAutomaticKeyGeneration()
       .SetApplicationName(ApplicationConstants.APP_NAME)
       .PersistKeysToFileSystem(new DirectoryInfo(AppContext.BaseDirectory));
             builder.Services.AddDbContext<DbManageSysDbContext>(op =>

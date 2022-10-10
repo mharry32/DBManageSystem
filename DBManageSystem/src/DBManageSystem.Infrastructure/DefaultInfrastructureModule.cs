@@ -66,6 +66,7 @@ public class DefaultInfrastructureModule : Module
     builder.RegisterType<RoleService>().As<IRoleService>().InstancePerLifetimeScope();
     builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
     builder.RegisterType<DbPasswordCryptoService>().As<IDbPasswordCryptoService>().InstancePerLifetimeScope();
+    builder.RegisterType<DatabaseServerManageService>().As<IDatabaseServerService>().InstancePerLifetimeScope();
     builder
       .RegisterType<Mediator>()
       .As<IMediator>()

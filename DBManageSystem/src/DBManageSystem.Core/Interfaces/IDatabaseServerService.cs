@@ -24,4 +24,8 @@ public interface IDatabaseServerService
 
   Task<Result<DatabaseServer>> GetDatabaseServerWithPasswordDecrptedById(int dbServerId);
 
+ Result<IReadOnlyCollection<DatabaseTypeEnum>> GetDatabaseTypes();
+
+  Task LogExecutedSql(DatabaseServer server, string sql);
+
 }

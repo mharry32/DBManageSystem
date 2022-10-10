@@ -23,7 +23,7 @@ public class DatabaseServer:EntityBase,IAggregateRoot
 
   public DateTime? LastUpdatedTime { get;private set; }
 
-  public DatabaseStatusEnum Status { get;private set; }
+  public DatabaseStatusEnum? Status { get;private set; }
 
   public DatabaseTypeEnum DatabaseType { get; set; }
 

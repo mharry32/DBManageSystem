@@ -23,6 +23,8 @@ public class DbManageSysDbContext : DbContext
   public DbSet<RoleMenu> roleMenus { get; set; }
 
   public DbSet<DatabaseServer> databaseServers { get; set; }
+
+  public DbSet<SqlLog> sqlLogs { get; set; }
   public DbManageSysDbContext(DbContextOptions<DbManageSysDbContext> options) : base(options)
   {
 
