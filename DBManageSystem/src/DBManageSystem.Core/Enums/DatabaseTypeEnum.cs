@@ -8,8 +8,8 @@ using Ardalis.SmartEnum;
 namespace DBManageSystem.Core.Enums;
 public class DatabaseTypeEnum : SmartEnum<DatabaseTypeEnum>
 {
-  public static readonly DatabaseTypeEnum SQLServer = new DatabaseTypeEnum(nameof(SQLServer), 0);
-  public static readonly DatabaseTypeEnum MySQL = new DatabaseTypeEnum(nameof(MySQL), 1);
+  public static readonly DatabaseTypeEnum SQLServer = new DatabaseTypeEnum(nameof(SQLServer), 1);
+  public static readonly DatabaseTypeEnum MySQL = new DatabaseTypeEnum(nameof(MySQL), 2);
 
   private DatabaseTypeEnum(string name, int value) : base(name, value)
   {

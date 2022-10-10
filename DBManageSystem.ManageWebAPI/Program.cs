@@ -22,6 +22,9 @@ using DBManageSystem.ManageWebAPI.Endpoints.AuthEndpoints;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace DBManageSystem.ManageWebAPI
 {
@@ -31,7 +34,11 @@ namespace DBManageSystem.ManageWebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.Logging.AddConsole();
+            var logger = new LoggerConfiguration()
+    .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+
+
+            builder.Services.AddLogging(logBuilder => logBuilder.AddSerilog(logger));
             builder.Services.AddDataProtection().DisableAutomaticKeyGeneration()
       .SetApplicationName(ApplicationConstants.APP_NAME)
       .PersistKeysToFileSystem(new DirectoryInfo(AppContext.BaseDirectory));
@@ -54,8 +61,6 @@ namespace DBManageSystem.ManageWebAPI
             var defaultPassword = builder.Configuration[DefaultPassword.Name];
             builder.Services.AddSingleton<DefaultPassword>(new DefaultPassword(defaultPassword));
 
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(DbManageSysRepository<>));
-            builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DbManageSysRepository<>));
             builder.Services.AddAutoMapper(typeof(Login));
             builder.Services.AddSwaggerGen(c =>
             {
@@ -151,6 +156,15 @@ namespace DBManageSystem.ManageWebAPI
                 var scopedProvider = scope.ServiceProvider;
                 try
                 {
+                    var keyManager = scopedProvider.GetService<IKeyManager>();
+                    var appdir = new DirectoryInfo(AppContext.BaseDirectory);
+                    var files =  appdir.GetFiles("key-*.xml");
+                    if(files.Length == 0) 
+                    {
+                        keyManager.CreateNewKey(
+                    activationDate: DateTimeOffset.Now,
+                    expirationDate: DateTimeOffset.Now.AddYears(999));
+                    }
                     var userManager = scopedProvider.GetRequiredService<UserManager<User>>();
                     var roleManager = scopedProvider.GetRequiredService<RoleManager<Role>>();
                     var identityContext = scopedProvider.GetRequiredService<AppIdentityDbContext>();
@@ -160,6 +174,7 @@ namespace DBManageSystem.ManageWebAPI
                    var _dbManageSysDbContext = scopedProvider.GetRequiredService<DbManageSysDbContext>();
                     var databaseCreator = _dbManageSysDbContext.GetService<IRelationalDatabaseCreator>();
                     databaseCreator.CreateTables();
+
 
                 }
                 catch (Exception ex)

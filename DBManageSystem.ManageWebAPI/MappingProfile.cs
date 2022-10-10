@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Entities.MenuAggregate;
+using DBManageSystem.Core.Enums;
+using DBManageSystem.ManageWebAPI.Endpoints.DBManageEndpoints;
 using DBManageSystem.ManageWebAPI.Endpoints.MenuEndpoints;
 using DBManageSystem.ManageWebAPI.Endpoints.RoleManageEndpoints;
 using DBManageSystem.ManageWebAPI.Endpoints.UserManageEndpoints;
@@ -11,11 +13,38 @@ namespace DBManageSystem.ManageWebAPI
     {
         public MappingProfile()
         {
+            CreateMap<DatabaseServerTypeDTO, DatabaseTypeEnum>().ConvertUsing((s, d) =>
+            {
+                return DatabaseTypeEnum.FromValue(s.TypeId);
+            });
+
+            CreateMap<DatabaseTypeEnum, DatabaseServerTypeDTO>().ConvertUsing((t, s) =>
+            {
+                return new DatabaseServerTypeDTO()
+                {
+                    TypeId = t.Value,
+                    TypeName = t.Name
+                };
+            });
+
+            CreateMap<DateTime?, string>().ConvertUsing((d, s) =>
+            {
+                if(d==null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return d.Value.ToString("yyyy-MM-dd HH:mm");
+                }
+            });
             CreateMap<CreateUserRequest, User>();
             CreateMap<User, UserDTO>();
             CreateMap<Role, RoleDTO>();
             CreateMap<MainMenu, MainMenuDTO>();
             CreateMap<SubMenu, SubMenuDTO>();
+            CreateMap<CreateDBRequest, DatabaseServer>();
+            CreateMap<DatabaseServer, DatabaseServerDTO>();
         }
     }
 }
