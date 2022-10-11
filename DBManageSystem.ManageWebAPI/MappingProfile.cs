@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DBManageSystem.Core.Entities;
 using DBManageSystem.Core.Entities.MenuAggregate;
+using DBManageSystem.Core.Entities.SchemaAggregate;
 using DBManageSystem.Core.Enums;
 using DBManageSystem.ManageWebAPI.Endpoints.DBManageEndpoints;
+using DBManageSystem.ManageWebAPI.Endpoints.DBOperationsEndpoints;
 using DBManageSystem.ManageWebAPI.Endpoints.MenuEndpoints;
 using DBManageSystem.ManageWebAPI.Endpoints.RoleManageEndpoints;
 using DBManageSystem.ManageWebAPI.Endpoints.UserManageEndpoints;
@@ -67,6 +69,8 @@ namespace DBManageSystem.ManageWebAPI
             CreateMap<CreateDBRequest, DatabaseServer>();
             CreateMap<DatabaseServer, DatabaseServerDTO>();
             CreateMap<DatabaseServerDTO, DatabaseServer>();
+            CreateMap<DatabaseSchema, DatabaseSchemaDTO>();
+            CreateMap<TableSchema, TableSchemaDTO>();
         }
     }
 }
