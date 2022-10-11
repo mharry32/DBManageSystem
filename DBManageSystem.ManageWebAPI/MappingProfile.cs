@@ -27,6 +27,15 @@ namespace DBManageSystem.ManageWebAPI
                 };
             });
 
+            CreateMap<int, DatabaseStatusEnum?>().ConvertUsing((i,dse) =>
+            {
+                if (i == 0)
+                {
+                    return null;
+                }
+                return DatabaseStatusEnum.FromValue(i);
+            });
+
             CreateMap<DateTime?, string>().ConvertUsing((d, s) =>
             {
                 if(d==null)
@@ -38,6 +47,18 @@ namespace DBManageSystem.ManageWebAPI
                     return d.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             });
+
+            CreateMap<string, DateTime?>().ConvertUsing((s, d) =>
+            {
+                if (string.IsNullOrEmpty(s))
+                {
+                    return null;
+                }
+                else
+                {
+                    return DateTime.Parse(s);
+                }
+            });
             CreateMap<CreateUserRequest, User>();
             CreateMap<User, UserDTO>();
             CreateMap<Role, RoleDTO>();
@@ -45,6 +66,7 @@ namespace DBManageSystem.ManageWebAPI
             CreateMap<SubMenu, SubMenuDTO>();
             CreateMap<CreateDBRequest, DatabaseServer>();
             CreateMap<DatabaseServer, DatabaseServerDTO>();
+            CreateMap<DatabaseServerDTO, DatabaseServer>();
         }
     }
 }
