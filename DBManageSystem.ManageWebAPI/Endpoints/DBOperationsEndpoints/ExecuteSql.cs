@@ -10,12 +10,11 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.DBOperationsEndpoints
 {
     public class ExecuteSql : EndpointBaseAsync.WithRequest<ExecuteSqlRequest>.WithActionResult<SqlExecuteResult>
     {
-        private readonly IMapper _mapper;
+
         private readonly IDbServiceStrategy _dbServiceStrategy;
         private readonly IDatabaseServerService _databaseServerService;
-        public ExecuteSql(IDbServiceStrategy strategy, IDatabaseServerService manageService, IMapper mapper)
+        public ExecuteSql(IDbServiceStrategy strategy, IDatabaseServerService manageService)
         {
-            _mapper = mapper;
             _dbServiceStrategy = strategy;
             _databaseServerService = manageService;
         }
@@ -37,6 +36,11 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.DBOperationsEndpoints
             var service = _dbServiceStrategy.Decide(dbserver.DatabaseType);
 
             var execResult = await service.ExecuteSql(dbserver, request.DatabaseName, request.SqlText);
+
+            if(execResult.IsSuccess == true)
+            {
+                await _databaseServerService.LogExecutedSql(dbserver, request.SqlText);
+            }
 
             return execResult;
         }

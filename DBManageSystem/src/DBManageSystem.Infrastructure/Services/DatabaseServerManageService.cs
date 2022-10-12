@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Ardalis.Result;
+using Ardalis.Specification;
 using DBManageSystem.Core.Entities;
+using DBManageSystem.Core.Entities.Specifications;
 using DBManageSystem.Core.Enums;
 using DBManageSystem.Core.Interfaces;
 using DBManageSystem.SharedKernel.Interfaces;
+using MediatR;
 
 namespace DBManageSystem.Infrastructure.Services;
 public class DatabaseServerManageService : IDatabaseServerService
@@ -85,8 +88,10 @@ public class DatabaseServerManageService : IDatabaseServerService
   {
     try
     {
+      //新建一个对象
       var dbServerInDb = await _dbServerRepository.GetByIdAsync(dbServerId);
       Guard.Against.Null(dbServerInDb);
+      var rawPassword = "";
       if (string.IsNullOrEmpty(dbServerInDb.Password) != true)
       {
         var passwordDecryptResult = await _dbPasswordCryptoService.Decrypt(dbServerInDb.Password);
@@ -97,10 +102,20 @@ public class DatabaseServerManageService : IDatabaseServerService
         }
         else
         {
-          dbServerInDb.Password = passwordDecryptResult.Value;
+          rawPassword = passwordDecryptResult.Value;
         }
       }
-      return Result.Success(dbServerInDb);
+      DatabaseServer serverToReturn = new DatabaseServer()
+      {
+        DatabaseType = dbServerInDb.DatabaseType,
+        ConnectUrl = dbServerInDb.ConnectUrl,
+        Password = rawPassword,
+        UserName = dbServerInDb.UserName,
+        Id = dbServerInDb.Id,
+        IsMonitored = dbServerInDb.IsMonitored,
+        Name = dbServerInDb.Name
+      };
+      return Result.Success(serverToReturn);
     }
     catch (ArgumentNullException argex)
     {
@@ -117,6 +132,34 @@ public class DatabaseServerManageService : IDatabaseServerService
   {
     var dbTypes = DatabaseTypeEnum.List;
     return Result.Success(dbTypes);
+  }
+
+  public async Task<PagedResult<List<SqlLog>>> GetExecutedSqls(int pageIndex, int pageSize)
+  {
+    try
+    {
+      SqlLogsPagedSpec spec = new SqlLogsPagedSpec(pageSize * pageIndex, pageSize);
+      var result = await _sqlLogRepository.ListAsync(spec);
+      var totalCount = await _sqlLogRepository.CountAsync();
+      
+      var totalPageCount = 0;
+      if (pageSize > 0)
+      {
+        totalPageCount = int.Parse(Math.Ceiling((decimal)totalCount / pageSize).ToString());
+      }
+      else
+      {
+        totalPageCount = totalCount > 0 ? 1 : 0;
+      }
+      PagedInfo pagedInfo = new PagedInfo(pageIndex, pageSize,totalPageCount,totalCount);
+      PagedResult<List<SqlLog>> pagedResult = new PagedResult<List<SqlLog>>(pagedInfo,result);
+      return pagedResult;
+    }
+    catch(Exception ex)
+    {
+      _logger.LogInformation(ex.ToString());
+      throw;
+    }
   }
 
   public async Task<Result<List<DatabaseServer>>> GetServerList()
@@ -136,7 +179,7 @@ public class DatabaseServerManageService : IDatabaseServerService
   public async Task LogExecutedSql(DatabaseServer server, string sql)
   {
     try
-    {
+    { 
       SqlLog sqlLog = new SqlLog(server.ConnectUrl,sql);
       await _sqlLogRepository.AddAsync(sqlLog);
      

@@ -28,4 +28,6 @@ public interface IDatabaseServerService
 
   Task LogExecutedSql(DatabaseServer server, string sql);
 
+  Task<PagedResult<List<SqlLog>>> GetExecutedSqls(int pageIndex, int itemsPage);
+
 }

@@ -71,6 +71,7 @@ namespace DBManageSystem.ManageWebAPI
             CreateMap<DatabaseServerDTO, DatabaseServer>();
             CreateMap<DatabaseSchema, DatabaseSchemaDTO>();
             CreateMap<TableSchema, TableSchemaDTO>();
+            CreateMap<SqlLog, SqlLogDTO>();
         }
     }
 }
