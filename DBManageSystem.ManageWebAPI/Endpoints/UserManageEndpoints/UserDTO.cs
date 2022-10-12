@@ -8,6 +8,7 @@ namespace DBManageSystem.ManageWebAPI.Endpoints.UserManageEndpoints
 
         public string UserName { get; set; }
 
+        public string? LastLoginIP { get; set; }
         public RoleDTO Role { get; set; }
     }
 }
