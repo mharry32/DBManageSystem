@@ -15,6 +15,15 @@
 - 前后端分离架构
 - ...
 
+## 在线demo
+[demo](http://mharry.eastasia.cloudapp.azure.com:8080/)  
+
+默认账号：admin  
+
+密码：DbSys888888!  
+
+请不要更改密码！
+
 ## 运行环境
 
 - MySQL
