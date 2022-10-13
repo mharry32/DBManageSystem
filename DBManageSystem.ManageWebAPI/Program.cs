@@ -51,7 +51,7 @@ namespace DBManageSystem.ManageWebAPI
             {
             op.UseMySql(builder.Configuration["AppIdentityDbConnectString"], MySqlServerVersion.LatestSupportedServerVersion);
             });
-            builder.Services.AddIdentity<User, Role>()
+            builder.Services.AddIdentity<User, Role>(options=>options.User.AllowedUserNameCharacters=null)
         .AddEntityFrameworkStores<AppIdentityDbContext>()
         .AddDefaultTokenProviders();
 

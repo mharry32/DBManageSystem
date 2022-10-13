@@ -88,7 +88,8 @@ public class UserService : IUserService
   public async Task<Result<List<User>>> GetAllUsersExceptForCurrent(int currentUserId)
   {
     var spec = new UserByIdExcludeSpec(currentUserId);
-    var users = await _userManager.Users.WithSpecification(spec).ToListAsync();
+    var excludeadmin = new UserByNameExcludeSpec("admin");
+    var users = await _userManager.Users.WithSpecification(spec).WithSpecification(excludeadmin).ToListAsync();
     return new Result<List<User>>(users);
   }
 
