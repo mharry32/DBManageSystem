@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DBManageSystem.App.MainPage">
+    <StackLayout Margin="8,12"
+                 Spacing="0">
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <StackLayout HorizontalOptions="FillAndExpand"
+                     Orientation="Horizontal"
+                     Margin="0">
+            <Border StrokeShape="RoundRectangle 22"
+                    Padding="0"
+                    Margin="0"
+                    HorizontalOptions="FillAndExpand"
+                    Background="LightGray"
+                    StrokeThickness="0">
+                
+                    <Label FontFamily="icon"
+                           FontSize="22"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Text="DatabaseManage"
+                           TextColor="Black"
+                           VerticalOptions="CenterAndExpand" />
+
+            </Border>
+
+            <Border StrokeShape="RoundRectangle 20"
+                    Padding="0"
+                    HeightRequest="40"
+                    Margin="6,0"
+                    Background="#5a9cf8"
+                    WidthRequest="40"
+                    HorizontalOptions="End"
+                    StrokeThickness="0">
+                <Label FontFamily="icon"
+                       FontSize="22"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Text="+"
+                       TextColor="White"
+                       VerticalOptions="CenterAndExpand" />
+            </Border>
+        </StackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+   </StackLayout>
+</ContentPage>
+
