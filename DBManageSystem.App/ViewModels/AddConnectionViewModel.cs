@@ -12,14 +12,14 @@ namespace DBManageSystem.App.ViewModels
     {
        public DatabaseServer server;
 
-        public IList<string> serverTypes;
+        public IList<DatabaseTypeEnum> serverTypes { get; set; }
 
-        public string SelectedDBType { get; set; }
+        public DatabaseTypeEnum SelectedDBType { get; set; }
         public AddConnectionViewModel()
         {
             server = new DatabaseServer();
-            serverTypes = new List<string>();
-            DatabaseTypeEnum.List.ToList().ForEach(t => serverTypes.Add(t.Name));
+            serverTypes = DatabaseTypeEnum.List.ToList();
+            
         }
 
 
