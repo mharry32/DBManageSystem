@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.UnitTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.ManageWebAPI", "DBManageSystem.ManageWebAPI\DBManageSystem.ManageWebAPI.csproj", "{2809259E-25B0-47D7-B1DA-E7B8D4ECCD80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBManageSystem.App", "DBManageSystem.App\DBManageSystem.App.csproj", "{9B87AD28-21AA-4547-9256-123D9F223D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBManageSystem.App", "DBManageSystem.App\DBManageSystem.App.csproj", "{9B87AD28-21AA-4547-9256-123D9F223D48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +55,7 @@ Global
 		{2809259E-25B0-47D7-B1DA-E7B8D4ECCD80}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B87AD28-21AA-4547-9256-123D9F223D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B87AD28-21AA-4547-9256-123D9F223D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B87AD28-21AA-4547-9256-123D9F223D48}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{9B87AD28-21AA-4547-9256-123D9F223D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B87AD28-21AA-4547-9256-123D9F223D48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

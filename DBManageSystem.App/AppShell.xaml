@@ -3,14 +3,34 @@
     x:Class="DBManageSystem.App.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:DBManageSystem.App"
+    xmlns:local="clr-namespace:DBManageSystem.App.Views"
+     Shell.TabBarBackgroundColor ="White"
+       Shell.TabBarTitleColor="#5a9cf8"
+    Shell.TabBarUnselectedColor="Black"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage"
-        />
-
+    <TabBar>
+        <Tab Title="Explore">
+            <Tab.Icon>
+                <FontImageSource FontFamily="icon"
+                                 Glyph="&#xf56e;"></FontImageSource>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:ConnectionMangePage}" />
+        </Tab>
+        <Tab Title="Cart">
+            <Tab.Icon>
+                <FontImageSource FontFamily="icon"
+                                 Glyph="&#xf110;"></FontImageSource>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:AddConnectionPage}" />
+        </Tab>
+        <Tab Title="Account">
+            <Tab.Icon>
+                <FontImageSource FontFamily="icon"
+                                 Glyph="&#xf004;"></FontImageSource>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
+        </Tab>
+    </TabBar>
 </Shell>
 

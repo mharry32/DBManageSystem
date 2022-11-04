@@ -45,4 +45,25 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Resources\Fonts\icon.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\DBManageSystem\src\DBManageSystem.Core\DBManageSystem.Core.csproj" />
+	  <ProjectReference Include="..\DBManageSystem\src\DBManageSystem.Infrastructure\DBManageSystem.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\AddConnectionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ConnectionMangePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
