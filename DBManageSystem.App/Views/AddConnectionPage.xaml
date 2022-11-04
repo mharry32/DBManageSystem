@@ -18,6 +18,24 @@
 
             </StackLayout>
         </Frame>
+
+        <Frame HasShadow="false"
+                      Padding="10"
+                      BorderColor="Gray"
+                      Margin="30,30,30,10"
+                      Grid.Row="1"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="3">
+            <StackLayout Orientation="Horizontal"
+                               Spacing="20">
+                <Label Text="Server Type:" VerticalOptions="Center"/>
+                <Picker Title="Select a Database Type"
+        ItemsSource="{Binding serverTypes}"
+        SelectedItem="{Binding SelectedDBType}" Margin="10,0,0,0" HorizontalOptions="FillAndExpand"/>
+
+            </StackLayout>
+        </Frame>
+        <Button Text="Add" Clicked="Button_Clicked"></Button>
     </VerticalStackLayout>
         
 </ContentPage>

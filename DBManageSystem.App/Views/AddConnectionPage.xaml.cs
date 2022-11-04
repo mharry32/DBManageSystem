@@ -11,4 +11,9 @@ public partial class AddConnectionPage : ContentPage
 
     }
 
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        var vm = BindingContext as AddConnectionViewModel;
+        Console.WriteLine(vm.SelectedDBType);
+    }
 }

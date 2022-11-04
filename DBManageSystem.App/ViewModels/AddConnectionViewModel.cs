@@ -1,4 +1,5 @@
 ﻿using DBManageSystem.Core.Entities;
+using DBManageSystem.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,14 @@ namespace DBManageSystem.App.ViewModels
     {
        public DatabaseServer server;
 
+        public IList<string> serverTypes;
+
+        public string SelectedDBType { get; set; }
         public AddConnectionViewModel()
         {
             server = new DatabaseServer();
+            serverTypes = new List<string>();
+            DatabaseTypeEnum.List.ToList().ForEach(t => serverTypes.Add(t.Name));
         }
 
 
@@ -30,4 +36,5 @@ namespace DBManageSystem.App.ViewModels
             }
         }
     }
+
 }
