@@ -3,40 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DBManageSystem.App.Views.AddConnectionPage"
              Title="AddConnectionPage">
-    <VerticalStackLayout>
-        <Frame HasShadow="false"
-                      Padding="10"
-                      BorderColor="Gray"
-                      Margin="30,30,30,10"
-                      Grid.Row="1"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="3">
-            <StackLayout Orientation="Horizontal"
-                               Spacing="20">
-                <Label Text="Server URL:" VerticalOptions="Center"/>
-                <Entry Text="{Binding ConnectionUrl}" Margin="10,0,0,0" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
+    <VerticalStackLayout Spacing="10">
 
-            </StackLayout>
-        </Frame>
 
-        <Frame HasShadow="false"
-                      Padding="10"
-                      BorderColor="Gray"
-                      Margin="30,30,30,10"
-                      Grid.Row="1"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="3">
-            <StackLayout Orientation="Horizontal"
-                               Spacing="20">
-                <Label Text="Server Type:" VerticalOptions="Center"/>
+                <Label Text="Server URL"/>
+                <Entry Text="{Binding ConnectionUrl}"/>
+
+                <Label Text="Server Type"/>
                 <Picker Title="Select a Database Type"
         ItemsSource="{Binding serverTypes}"
         ItemDisplayBinding="{Binding Name}"
         SelectedItem="{Binding SelectedDBType}" Margin="10,0,0,0" HorizontalOptions="FillAndExpand"/>
 
-            </StackLayout>
-        </Frame>
-        <Button Text="Add" Clicked="Button_Clicked"></Button>
+        <Label Text="UserName(Optional)"/>
+        <Entry Text="{Binding UserName}"/>
+        
+        <Label Text="Password(Optional)"/>
+        <Entry Text="{Binding Password}"/>
+
+        <Button Text="Add" Command="{Binding AddDatabaseServer}"></Button>
     </VerticalStackLayout>
         
 </ContentPage>
