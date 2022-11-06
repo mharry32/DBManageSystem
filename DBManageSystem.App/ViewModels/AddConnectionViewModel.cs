@@ -31,7 +31,17 @@ namespace DBManageSystem.App.ViewModels
 
         private async void AddDatabaseCommand()
         {
-            server.Id = 1;
+            var dblist = await _databaseServerService.GetServerList();
+            if (dblist.Value.Count == 0)
+            {
+                server.Id = 1;
+            }
+            else
+            {
+               var maxid = dblist.Value.MaxBy(t => t.Id);
+                server.Id = maxid.Id + 1;
+            }
+            
             server.Name = DateTime.Now.Ticks.ToString();
             var result = await _databaseServerService.CreateDatabaseServer(server);
         }
