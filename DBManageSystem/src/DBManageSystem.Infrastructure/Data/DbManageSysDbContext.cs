@@ -88,7 +88,6 @@ public class DbManageSysDbContext : DbContext
       Name = accountManageMenus.Item1.Name,
       Order = accountManageMenus.Item1.Order
     });
-
     modelBuilder.ConfigureSmartEnum();
   }
 }

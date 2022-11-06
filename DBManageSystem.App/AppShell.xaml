@@ -22,7 +22,7 @@
                 <FontImageSource FontFamily="icon"
                                  Glyph="&#xf110;"></FontImageSource>
             </Tab.Icon>
-            <ShellContent ContentTemplate="{DataTemplate local:AddConnectionPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:AddConnectionPage}"/>
         </Tab>
         <Tab Title="Account">
             <Tab.Icon>

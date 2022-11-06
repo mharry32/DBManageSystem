@@ -12,14 +12,14 @@ namespace DBManageSystem.App.ViewModels
 {
     public class AddConnectionViewModel:BaseViewModel
     {
-       public DatabaseServer server;
+       public DatabaseServer server { get; set; }
 
         private readonly IDatabaseServerService _databaseServerService;
         public ICommand AddDatabaseServer { get; set; }
 
         public IList<DatabaseTypeEnum> serverTypes { get; set; }
 
-        public DatabaseTypeEnum SelectedDBType { get; set; }
+        
         public AddConnectionViewModel(IDatabaseServerService databaseServerService)
         {
             _databaseServerService = databaseServerService;
@@ -29,9 +29,11 @@ namespace DBManageSystem.App.ViewModels
 
         }
 
-        private void AddDatabaseCommand()
+        private async void AddDatabaseCommand()
         {
-
+            server.Id = 1;
+            server.Name = DateTime.Now.Ticks.ToString();
+            var result = await _databaseServerService.CreateDatabaseServer(server);
         }
 
         public string ConnectionUrl

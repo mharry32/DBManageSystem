@@ -13,7 +13,7 @@
                 <Picker Title="Select a Database Type"
         ItemsSource="{Binding serverTypes}"
         ItemDisplayBinding="{Binding Name}"
-        SelectedItem="{Binding SelectedDBType}" Margin="10,0,0,0" HorizontalOptions="FillAndExpand"/>
+        SelectedItem="{Binding server.DatabaseType}" Margin="10,0,0,0" HorizontalOptions="FillAndExpand"/>
 
         <Label Text="UserName(Optional)"/>
         <Entry Text="{Binding UserName}"/>
