@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DBManageSystem.App.Views.AddConnectionPage"
              Title="AddConnectionPage">
-    <VerticalStackLayout Spacing="10">
+    <VerticalStackLayout Spacing="10" Margin="10">
 
 
                 <Label Text="Server URL"/>
-                <Entry Text="{Binding ConnectionUrl}"/>
+                <Entry Placeholder="host:port" Text="{Binding ConnectionUrl}"/>
 
                 <Label Text="Server Type"/>
                 <Picker Title="Select a Database Type"
