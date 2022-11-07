@@ -44,6 +44,7 @@ namespace DBManageSystem.App.ViewModels
             
             server.Name = DateTime.Now.Ticks.ToString();
             var result = await _databaseServerService.CreateDatabaseServer(server);
+            
         }
 
         public string ConnectionUrl

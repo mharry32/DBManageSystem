@@ -42,8 +42,10 @@ public static class MauiProgram
 		builder.Services.AddTransient(typeof(IDbPasswordCryptoService),typeof(DbPasswordCryptoService));
 		builder.Services.AddTransient(typeof(IDatabaseServerService),typeof(DatabaseServerManageService));
 
-        builder.Services.AddTransient<ViewModels.AddConnectionViewModel>();
+        builder.Services.AddSingleton<ViewModels.AddConnectionViewModel>();
         builder.Services.AddSingleton<Views.AddConnectionPage>();
+        builder.Services.AddSingleton<ViewModels.ConnectionManageViewModel>();
+        builder.Services.AddSingleton<Views.ConnectionMangePage>();
 
         var app = builder.Build();
         using (var scope = app.Services.CreateScope())
@@ -51,7 +53,6 @@ public static class MauiProgram
             var scopedProvider = scope.ServiceProvider;
             try
             {
-                var tests = scopedProvider.GetRequiredService<IDatabaseServerService>();
                 var keyManager = scopedProvider.GetService<IKeyManager>();
                 var appdir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
                 var files = appdir.GetFiles("key-*.xml");
